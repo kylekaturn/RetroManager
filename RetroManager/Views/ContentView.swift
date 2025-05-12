@@ -5,9 +5,9 @@ struct ContentView: View {
     @State var searchText: String = ""
     
     var body: some View {
-        NavigationSplitView {
-            GameListView(searchText: $searchText)
-        } detail: {
+        NavigationSplitView{
+            GameListView()
+        }detail:{
             GameView()
                 .navigationTitle("Game")
                 .toolbar {
@@ -20,7 +20,6 @@ struct ContentView: View {
                     }
                 }
         }
-        .searchable(text: $searchText, placement: .sidebar)
     }
 }
 

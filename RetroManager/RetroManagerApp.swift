@@ -4,14 +4,7 @@ import SwiftUI
 struct RetroManagerApp: App {
     
     init(){
-        //Playlist
-        let mamePlaylistPath = "/Volumes/Depot/RetroArch/playlists/MAME.lpl"
-
-        if FileManager.default.fileExists(atPath: mamePlaylistPath) {
-            print("Mame file exists.")
-        } else {
-            print("Mame file doesnt exists.")
-        }
+        let playlist: Playlist = Playlist(name:"MAME")!
     }
     
     var body: some Scene {

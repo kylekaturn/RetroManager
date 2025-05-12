@@ -2,17 +2,28 @@ import SwiftUI
 
 struct GameListView: View {
     
-    @Binding var searchText: String
+    @State var searchText: String = ""
     
     var body: some View {
-        List{
-            ForEach(0...30, id: \.self){ i in
-                Text("List1")
+        HStack{
+            List{
+                ForEach(0...30, id: \.self){ i in
+                    Text("List \(i)")
+                }
             }
-        }.listStyle(.sidebar)
+            .listStyle(.sidebar)
+            
+            List{
+                ForEach(0...30, id: \.self){ i in
+                    Text("List \(i)")
+                }
+            }
+            .listStyle(.sidebar)
+            .searchable(text: $searchText, placement:.sidebar, prompt: "Search")
+        }
     }
 }
 
 #Preview {
-    GameListView(searchText: .constant(""))
+    GameListView()
 }
