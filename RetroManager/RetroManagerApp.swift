@@ -1,14 +1,19 @@
-//
-//  RetroManagerApp.swift
-//  RetroManager
-//
-//  Created by Daewoo Kim on 5/11/25.
-//
-
 import SwiftUI
 
 @main
 struct RetroManagerApp: App {
+    
+    init(){
+        //Playlist
+        let mamePlaylistPath = "/Volumes/Depot/RetroArch/playlists/MAME.lpl"
+
+        if FileManager.default.fileExists(atPath: mamePlaylistPath) {
+            print("Mame file exists.")
+        } else {
+            print("Mame file doesnt exists.")
+        }
+    }
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
@@ -19,7 +24,6 @@ struct RetroManagerApp: App {
                 }
             }
         }
-        
         Settings{
             SettingsView().frame(width: 300, height: 300)
         }
