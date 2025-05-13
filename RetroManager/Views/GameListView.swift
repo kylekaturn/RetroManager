@@ -3,8 +3,9 @@ import SwiftUI
 struct GameListView: View {
     
     @Binding var playlistData: PlaylistData
+    @Binding var selectedItem: PlaylistItem?
     @State var searchText: String = ""
-    
+   
     var body: some View {
         HStack{
             List{
@@ -13,18 +14,25 @@ struct GameListView: View {
                 }
             }
             .listStyle(.sidebar)
+            .frame(width:100)
             
-            List{
-                ForEach(0...30, id: \.self){ i in
-                    Text("List \(i)")
+            List(selection: $selectedItem){
+                ForEach(playlistData.items, id : \.self) {item in
+                    Text("\(item.label)")
                 }
             }
             .listStyle(.sidebar)
+            .frame(minWidth:300)
             .searchable(text: $searchText, placement:.sidebar, prompt: "Search")
+            .onAppear{
+                if(selectedItem == nil) {
+                    selectedItem = playlistData.items.first
+                }
+            }
         }
     }
 }
 
 #Preview {
-    GameListView(playlistData:.constant(PlaylistData()))
+    GameListView(playlistData:.constant(PlaylistData()), selectedItem:.constant(nil))
 }

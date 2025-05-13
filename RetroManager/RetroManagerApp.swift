@@ -3,14 +3,21 @@ import SwiftUI
 @main
 struct RetroManagerApp: App {
     
+    @State var playlist: Playlist
+    
     init(){
-        let playlist: Playlist = Playlist(name:"MAME")!
+       playlist = Playlist(name:"MAME")!
     }
     
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(playlistData: $playlist.playlistData)
         }.commands{
+            CommandMenu("Task"){
+                Button("Task Command"){
+                    print("Task Command")
+                }
+            }
             CommandGroup(after: .appInfo){
                 Button("Custom Command"){
                     print("Custom Command")
