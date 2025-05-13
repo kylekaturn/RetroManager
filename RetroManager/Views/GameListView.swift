@@ -2,6 +2,7 @@ import SwiftUI
 
 struct GameListView: View {
     
+    @Binding var playlistData: PlaylistData
     @State var searchText: String = ""
     
     var body: some View {
@@ -25,5 +26,5 @@ struct GameListView: View {
 }
 
 #Preview {
-    GameListView()
+    GameListView(playlistData:.constant(PlaylistData()))
 }
