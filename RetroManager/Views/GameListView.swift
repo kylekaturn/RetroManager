@@ -2,7 +2,7 @@ import SwiftUI
 
 struct GameListView: View {
     
-    @Binding var playlistData: PlaylistData
+    @Binding var playlists: [Playlist]
     @Binding var selectedItem: PlaylistItem?
     @State var searchText: String = ""
    
@@ -17,7 +17,7 @@ struct GameListView: View {
             .frame(width:100)
             
             List(selection: $selectedItem){
-                ForEach(playlistData.items, id : \.self) {item in
+                ForEach(playlists[0].playlistData.items, id : \.self) {item in
                     Text("\(item.label)")
                 }
             }
@@ -26,7 +26,7 @@ struct GameListView: View {
             .searchable(text: $searchText, placement:.sidebar, prompt: "Search")
             .onAppear{
                 if(selectedItem == nil) {
-                    selectedItem = playlistData.items.first
+                    selectedItem = playlists[0].playlistData.items.first
                 }
             }
         }
@@ -34,5 +34,5 @@ struct GameListView: View {
 }
 
 #Preview {
-    GameListView(playlistData:.constant(PlaylistData()), selectedItem:.constant(nil))
+    GameListView(playlists:.constant([Playlist(), Playlist()]), selectedItem:.constant(nil))
 }

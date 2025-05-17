@@ -2,16 +2,11 @@ import SwiftUI
 
 @main
 struct RetroManagerApp: App {
-    
-    @State var playlist: Playlist
-    
-    init(){
-       playlist = Playlist(name:"MAME")!
-    }
+    @StateObject var playlistManager: PlaylistManager = PlaylistManager()
     
     var body: some Scene {
         WindowGroup {
-            ContentView(playlistData: $playlist.playlistData)
+            ContentView(playlists: $playlistManager.playlists)
         }.commands{
             CommandMenu("Task"){
                 Button("Task Command"){
