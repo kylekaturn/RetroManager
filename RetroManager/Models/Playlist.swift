@@ -57,6 +57,17 @@ struct Playlist: Codable, Identifiable, Hashable{
         scan_overwrite_playlist = false
         items = [PlaylistItem(), PlaylistItem(), PlaylistItem()]
     }
+    
+    func save() throws {
+//        guard !file.isEmpty else {
+//            throw NSError(domain: "PlaylistSaveError", code: 1, userInfo: [NSLocalizedDescriptionKey: "file 경로가 비어 있습니다."])
+//        }
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.prettyPrinted, .withoutEscapingSlashes]
+        let data = try encoder.encode(self)
+        let url = URL(fileURLWithPath: file)
+        try data.write(to: url)
+    }
 }
 
 struct PlaylistItem: Codable, Identifiable, Hashable{

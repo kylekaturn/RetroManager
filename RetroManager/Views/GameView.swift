@@ -8,14 +8,6 @@ struct GameView: View {
     var body: some View {
         ScrollView(.vertical, showsIndicators: true){
             VStack(alignment: .leading){
-                Text("DashBoard")
-                    .font(.title)
-                    .fontWeight(.bold)
-                
-                HStack{
-                    Text("HStack")
-                    Spacer()
-                }
                 Text("Label : \(playlistManager.selectedPlaylistItem.label)")
                 Text("Core : \(playlistManager.selectedPlaylistItem.core_name)")
             }
