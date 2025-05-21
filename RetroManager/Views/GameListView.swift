@@ -28,12 +28,7 @@ struct GameListView: View {
                     ForEach(playlistManager.selectedPlaylist.items, id : \.self) {item in
                         Text("\(item.label)")
                             .contextMenu{
-                                Button("Copy Item"){
-                                    //let pasteboard = NSPasteboard.general
-                                    //pasteboard.clearContents()
-                                   // pasteboard.setString(item.id, forType: .string)
-                                    print(item.id)
-                                }
+                                copyContextMenu(for: item)
                             }
                     }
                 }
@@ -61,6 +56,21 @@ struct GameListView: View {
                 }
                 
             }
+        }
+    }
+}
+
+@ViewBuilder
+private func copyContextMenu(for item: PlaylistItem) -> some View {
+    Button("Copy Item") {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.prettyPrinted, .withoutEscapingSlashes]
+        if let data = try? encoder.encode(item),
+           let jsonString = String(data: data, encoding: .utf8) {
+            let pasteboard = NSPasteboard.general
+            pasteboard.clearContents()
+            pasteboard.setString(jsonString, forType: .string)
+            print(jsonString)
         }
     }
 }
