@@ -2,37 +2,47 @@ import SwiftUI
 
 struct GameListView: View {
     
-    @ObservedObject var playlistManager: PlaylistManager
-    @Binding var selectedPlaylist: Playlist?
-    @Binding var selectedPlaylistItem: PlaylistItem?
+    @EnvironmentObject var playlistManager: PlaylistManager;
+    @State var selectedPlaylist: Playlist? = nil
+    @State var selectedPlaylistItem: PlaylistItem? = nil
     @State var searchText: String = ""
    
     var body: some View {
         HStack{
             List(selection: $selectedPlaylist){
                 ForEach(playlistManager.playlists, id : \.self){ item in
-                    Text("\(item.default_core_name)")
+                    Text("\(item.file)")
                 }
             }
             .listStyle(.sidebar)
-            .frame(width:100)
+            .frame(width:150)
+            .onAppear(){
+                selectedPlaylist = playlistManager.selectedPlaylist
+            }
+            .onChange(of: selectedPlaylist){
+                print("OnChange")
+                playlistManager.selectedPlaylist = selectedPlaylist!
+            }
             
             List(selection: $selectedPlaylistItem){
-                ForEach(playlistManager.playlists[0].items, id : \.self) {item in
+                ForEach(playlistManager.selectedPlaylist.items, id : \.self) {item in
                     Text("\(item.label)")
                 }
             }
             .listStyle(.sidebar)
             .frame(minWidth:300)
             .searchable(text: $searchText, placement:.sidebar, prompt: "Search")
+            .onAppear(){
+                selectedPlaylistItem = playlistManager.selectedPlaylistItem
+            }
+            .onChange(of: selectedPlaylistItem){
+                print("OnChange")
+                playlistManager.selectedPlaylistItem = selectedPlaylistItem!
+            }
         }
     }
 }
 
 #Preview {
-    GameListView(
-        playlistManager: PlaylistManager(loadFiles: false),
-        selectedPlaylist: .constant(nil),
-        selectedPlaylistItem:.constant(nil)
-    )
+    GameListView().environmentObject(PlaylistManager())
 }

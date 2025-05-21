@@ -2,19 +2,13 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @ObservedObject var playlistManager: PlaylistManager;
-    @State var selectedPlaylist: Playlist? = nil
-    @State var selectedPlaylistItem: PlaylistItem? = nil
+    @EnvironmentObject var playlistManager: PlaylistManager;
     
     var body: some View {
         NavigationSplitView{
-            GameListView(
-                playlistManager: playlistManager,
-                selectedPlaylist: $selectedPlaylist,
-                selectedPlaylistItem: $selectedPlaylistItem
-            )
+            GameListView()
         }detail:{
-            GameView(playlistItem: $selectedPlaylistItem)
+            GameView()
                 .navigationTitle("Game")
                 .toolbar {
                     ToolbarItem(placement: .automatic) {
@@ -30,5 +24,5 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView(playlistManager: PlaylistManager(loadFiles: false))
+    ContentView().environmentObject(PlaylistManager())
 }

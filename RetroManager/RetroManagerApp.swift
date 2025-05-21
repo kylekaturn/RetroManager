@@ -6,7 +6,8 @@ struct RetroManagerApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ContentView(playlistManager: playlistManager)
+            ContentView()
+                .environmentObject(playlistManager)
         }.commands{
             CommandMenu("Task"){
                 Button("Task Command"){
