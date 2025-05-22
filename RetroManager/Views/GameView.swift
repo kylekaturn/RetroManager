@@ -12,9 +12,9 @@ struct GameView: View {
                 Text("Core : \(playlistManager.selectedPlaylistItem.core_name)")
                 Text("Path : \(playlistManager.selectedPlaylistItem.path)")
                 
-                Thumbnail(thumbnailPath: "")
-                Thumbnail(thumbnailPath: "")
-                Thumbnail(thumbnailPath: "")
+                Thumbnail(thumbnailType:.boxart , thumbnailPath: playlistManager.selectedPlaylistItem.label)
+                Thumbnail(thumbnailType:.snap , thumbnailPath: playlistManager.selectedPlaylistItem.label)
+                Thumbnail(thumbnailType:.title , thumbnailPath: playlistManager.selectedPlaylistItem.label)
             }
         }
         .background(Color.gray.opacity(0.05))
