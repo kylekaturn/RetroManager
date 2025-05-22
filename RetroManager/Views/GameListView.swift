@@ -50,16 +50,15 @@ struct GameListView: View {
                         Image(systemName: "arrow.right.page.on.clipboard")
                             .imageScale(.large)
                     }
-                    .buttonStyle(.automatic) // 필요 시 스타일 조절
-                    .help("복사")
+                    .buttonStyle(.automatic)
                     .padding(5)
                 }
-                
             }
         }
     }
 }
 
+//CopyItem context menu
 @ViewBuilder
 private func copyContextMenu(for item: PlaylistItem) -> some View {
     Button("Copy Item") {
@@ -75,6 +74,7 @@ private func copyContextMenu(for item: PlaylistItem) -> some View {
     }
 }
 
+//Preview
 #Preview {
     GameListView().environmentObject(PlaylistManager())
 }

@@ -10,6 +10,11 @@ struct GameView: View {
             VStack(alignment: .leading){
                 Text("Label : \(playlistManager.selectedPlaylistItem.label)")
                 Text("Core : \(playlistManager.selectedPlaylistItem.core_name)")
+                Text("Path : \(playlistManager.selectedPlaylistItem.path)")
+                
+                Thumbnail(thumbnailPath: "")
+                Thumbnail(thumbnailPath: "")
+                Thumbnail(thumbnailPath: "")
             }
         }
         .background(Color.gray.opacity(0.05))

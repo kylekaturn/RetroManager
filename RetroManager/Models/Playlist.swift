@@ -18,7 +18,7 @@ struct Playlist: Codable, Identifiable, Hashable{
     let scan_search_archives: Bool
     let scan_filter_dat_content: Bool
     let scan_overwrite_playlist: Bool
-    let items: [PlaylistItem]
+    var items: [PlaylistItem]
     
     enum CodingKeys: String, CodingKey {
         case version
@@ -58,6 +58,18 @@ struct Playlist: Codable, Identifiable, Hashable{
         items = [PlaylistItem(), PlaylistItem(), PlaylistItem()]
     }
     
+    //아이템 추가
+    mutating func AddItem(_ item: PlaylistItem){
+        items.append(item)
+        sort()
+    }
+    
+    //소팅
+    mutating func sort(){
+        items.sort { $0.label < $1.label }
+    }
+    
+    //Json 파일 저장
     func save() throws {
 //        guard !file.isEmpty else {
 //            throw NSError(domain: "PlaylistSaveError", code: 1, userInfo: [NSLocalizedDescriptionKey: "file 경로가 비어 있습니다."])
