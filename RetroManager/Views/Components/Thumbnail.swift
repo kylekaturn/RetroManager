@@ -5,7 +5,25 @@ struct Thumbnail: View {
     var thumbnailPath: String
     
     var body: some View {
-        Text(processFilename(thumbnailType: thumbnailType, filename: thumbnailPath))
+        VStack{
+            Form{
+                Text(thumbnailType.toString())
+                    .fontWeight(.bold)
+                
+                let fullPath = processFilename(thumbnailType: thumbnailType, filename: thumbnailPath)
+                if let image = NSImage(contentsOfFile: fullPath) {
+                    Image(nsImage: image)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 300, height: 300)
+                } else {
+                    Image(systemName: "exclamationmark.octagon.fill")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 300, height: 300)
+                }
+            }.formStyle(.grouped)
+        }
     }
 }
 
