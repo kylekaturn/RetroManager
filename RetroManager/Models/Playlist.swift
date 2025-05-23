@@ -55,7 +55,7 @@ struct Playlist: Codable, Identifiable, Hashable{
         scan_search_archives = false
         scan_filter_dat_content = false
         scan_overwrite_playlist = false
-        items = [Game(), Game(), Game()]
+        items = [Game(), Game(), Game(), Game(), Game(), Game(), Game(), Game(), Game(), Game(), Game(), Game(), Game(), Game()]
     }
     
     //아이템 추가

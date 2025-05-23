@@ -38,7 +38,7 @@ func processFilename(thumbnailType: ThumbnailType, filename: String) -> String {
     for ch in invalidCharacters {
         sanitized = sanitized.replacingOccurrences(of: String(ch), with: "_")
     }
-    let fullPath = Path.THUMBNAIL_PATH + "/" + "MAME" + "/" + thumbnailType.toFolderName() + "/" + sanitized + ".png"
+    let fullPath = Path.THUMBNAIL_PATH + thumbnailType.toFolderName() + "/" + sanitized + ".png"
     return fullPath
 }
 

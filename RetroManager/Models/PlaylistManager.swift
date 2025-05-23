@@ -31,6 +31,15 @@ class PlaylistManager: ObservableObject {
         }else{
             playlists.append(Playlist())
             playlists.append(Playlist())
+            playlists.append(Playlist())
+            playlists.append(Playlist())
+            playlists.append(Playlist())
+            playlists.append(Playlist())
+            playlists.append(Playlist())
+            playlists.append(Playlist())
+            playlists.append(Playlist())
+            playlists.append(Playlist())
+            
            // selectedPlaylist = playlists.first!
            // selectedPlaylistItem = selectedPlaylist.items.first!
         }
