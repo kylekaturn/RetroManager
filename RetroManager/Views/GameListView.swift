@@ -19,18 +19,18 @@ struct GameListView: View {
         HStack{
             List(selection: $selectedPlaylist){
                 ForEach(playlistManager.playlists, id : \.self){ item in
-                    Text("\(item.file)")
+                    Text("\(item.label)")
                 }
             }
             .listStyle(.sidebar)
             .frame(width:150)
             .onAppear(){
                 selectedPlaylist = playlistManager.selectedPlaylist
-                Path.SYSTEM_PATH = selectedPlaylist!.file
+                Path.SYSTEM_PATH = selectedPlaylist!.label
             }
             .onChange(of: selectedPlaylist){
                 playlistManager.selectedPlaylist = selectedPlaylist!
-                Path.SYSTEM_PATH = selectedPlaylist!.file
+                Path.SYSTEM_PATH = selectedPlaylist!.label
             }
             
             VStack{
@@ -53,18 +53,46 @@ struct GameListView: View {
                 .onChange(of: selectedGame){
                     playlistManager.selectedGame = selectedGame!
                 }
+                .onKeyPress(action: { keyPress in
+                    if(keyPress.key.character == "\u{7F}"){
+                        let index = playlistManager.selectedPlaylist.items.firstIndex(of : playlistManager.selectedGame)
+                        playlistManager.selectedPlaylist.deleteGame(playlistManager.selectedGame)
+                        selectedGame = playlistManager.selectedPlaylist.items[index!]
+                        return .handled
+                    }
+                    if(keyPress.key.character == "\r"){
+                        print("return")
+                        return .handled
+                    }
+                    return .ignored
+                })
                 
                 Spacer()
                 HStack{
                     Spacer()
+                    
                     Button(action: {
-                        print("Document icon clicked")
+                        do{
+                            try playlistManager.selectedPlaylist.save()
+                        }catch{
+                            print("Save Failed.")
+                        }
+                    }) {
+                        Image(systemName: "square.and.arrow.down")
+                            .imageScale(.large)
+                    }
+                    .buttonStyle(.automatic)
+                    .padding(5)
+                    
+                    Button(action: {
+                        print("Paste")
                     }) {
                         Image(systemName: "arrow.right.page.on.clipboard")
                             .imageScale(.large)
                     }
                     .buttonStyle(.automatic)
                     .padding(5)
+                    
                 }
             }
         }

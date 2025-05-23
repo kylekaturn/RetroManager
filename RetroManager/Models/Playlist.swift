@@ -2,6 +2,7 @@ import Foundation
 
 struct Playlist: Codable, Identifiable, Hashable{
     let id: UUID = UUID()
+    var label: String = ""
     var file: String = ""
     let version: String
     let default_core_path: String
@@ -59,9 +60,16 @@ struct Playlist: Codable, Identifiable, Hashable{
     }
     
     //아이템 추가
-    mutating func AddGame(_ game: Game){
+    mutating func addGame(_ game: Game){
         items.append(game)
         sort()
+    }
+    
+    //게임 제거
+    mutating func deleteGame(_ game: Game){
+        if let index = items.firstIndex(of: game) {
+            items.remove(at: index)
+        }
     }
     
     //소팅
@@ -74,11 +82,13 @@ struct Playlist: Codable, Identifiable, Hashable{
 //        guard !file.isEmpty else {
 //            throw NSError(domain: "PlaylistSaveError", code: 1, userInfo: [NSLocalizedDescriptionKey: "file 경로가 비어 있습니다."])
 //        }
+        print(file)
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .withoutEscapingSlashes]
         let data = try encoder.encode(self)
         let url = URL(fileURLWithPath: file)
         try data.write(to: url)
+        print("Save Complete")
     }
 }
 

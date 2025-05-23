@@ -16,7 +16,8 @@ class PlaylistManager: ObservableObject {
                     do {
                         let data = try Data(contentsOf: URL(fileURLWithPath: fileURL.path))
                         var playlist = try JSONDecoder().decode(Playlist.self, from: data)
-                        playlist.file = fileURL.deletingPathExtension().lastPathComponent
+                        playlist.label = fileURL.deletingPathExtension().lastPathComponent
+                        playlist.file = fileURL.path
                         playlists.append(playlist)
                         selectedPlaylist = playlists.first!
                         selectedGame = selectedPlaylist.items.first!
