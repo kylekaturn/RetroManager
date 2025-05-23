@@ -26,9 +26,11 @@ struct GameListView: View {
             .frame(width:150)
             .onAppear(){
                 selectedPlaylist = playlistManager.selectedPlaylist
+                Path.SYSTEM_PATH = selectedPlaylist!.file
             }
             .onChange(of: selectedPlaylist){
                 playlistManager.selectedPlaylist = selectedPlaylist!
+                Path.SYSTEM_PATH = selectedPlaylist!.file
             }
             
             VStack{
@@ -45,7 +47,6 @@ struct GameListView: View {
                 }
                 .listStyle(.sidebar)
                 .frame(minWidth:300)
-                //.searchable(text: $searchText, placement:.sidebar, prompt: "Search")
                 .onAppear(){
                     selectedGame = playlistManager.selectedGame
                 }

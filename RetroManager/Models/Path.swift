@@ -1,6 +1,6 @@
 class Path {
-    static let SYSTEM_PATH = "MAME"
+    static var SYSTEM_PATH = "MAME"
     static let RETROARCH_PATH = "/Volumes/Depot/RetroArch/"
-    static let THUMBNAIL_PATH = RETROARCH_PATH + "thumbnail/" + SYSTEM_PATH + "/"
-    static let SCREENSHOT_PATH = RETROARCH_PATH + "screenshots/"
+    static var THUMBNAIL_PATH: String {RETROARCH_PATH + "thumbnail/" + SYSTEM_PATH + "/"}
+    static var SCREENSHOT_PATH: String {RETROARCH_PATH + "screenshots/"}
 }
