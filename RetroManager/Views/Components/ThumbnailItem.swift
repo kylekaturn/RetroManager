@@ -9,7 +9,7 @@ struct ThumbnailItem: View {
             Text(thumbnailType.toString())
                 .fontWeight(.bold)
             
-            let fullPath = processFilename(thumbnailType: thumbnailType, filename: thumbnailPath)
+            let fullPath = Path.getThumbnailPath(thumbnailType: thumbnailType, label: thumbnailPath)
             if let image = NSImage(contentsOfFile: fullPath) {
                 Text("\(Int(image.size.width)) x \(Int(image.size.height))")
                 Image(nsImage: image)
@@ -30,16 +30,6 @@ struct ThumbnailItem: View {
         .cornerRadius(10)
         .padding(.trailing, 5)
     }
-}
-
-func processFilename(thumbnailType: ThumbnailType, filename: String) -> String {
-    let invalidCharacters: [Character] = ["&", "*", "/", ":", "<", ">", "?", "\\", "|"]
-    var sanitized = filename
-    for ch in invalidCharacters {
-        sanitized = sanitized.replacingOccurrences(of: String(ch), with: "_")
-    }
-    let fullPath = Path.THUMBNAIL_PATH + thumbnailType.toFolderName() + "/" + sanitized + ".png"
-    return fullPath
 }
 
 #Preview {

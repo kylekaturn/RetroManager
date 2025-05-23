@@ -3,31 +3,32 @@ import SwiftUI
 struct GameItem: View {
     
     var game: Game
+    var onDelete: (Game) -> Void = {_ in}
     
     var body: some View {
         Text("\(game.label)")
             .contextMenu{
-                copyContextMenu(for: game)
+                
+                Button("Copy Game") {
+                    let encoder = JSONEncoder()
+                    encoder.outputFormatting = [.prettyPrinted, .withoutEscapingSlashes]
+                    if let data = try? encoder.encode(game),
+                       let jsonString = String(data: data, encoding: .utf8) {
+                        let pasteboard = NSPasteboard.general
+                        pasteboard.clearContents()
+                        pasteboard.setString(jsonString, forType: .string)
+                        print(jsonString)
+                    }
+                }
+                
+                Button("Delete Game"){
+                    onDelete(game)
+                }
             }
             .onKeyPress(.return) {
                 print("Return key pressed!")
                 return .handled
             }
-    }
-}
-
-@ViewBuilder
-private func copyContextMenu(for game: Game) -> some View {
-    Button("Copy Item") {
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = [.prettyPrinted, .withoutEscapingSlashes]
-        if let data = try? encoder.encode(game),
-           let jsonString = String(data: data, encoding: .utf8) {
-            let pasteboard = NSPasteboard.general
-            pasteboard.clearContents()
-            pasteboard.setString(jsonString, forType: .string)
-            print(jsonString)
-        }
     }
 }
 

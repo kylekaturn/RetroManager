@@ -42,7 +42,7 @@ struct GameListView: View {
                 
                 List(selection: $selectedGame){
                     ForEach(filteredGames, id : \.self) {game in
-                        GameItem(game:game)
+                        GameItem(game:game, onDelete:deleteGame)
                     }
                 }
                 .listStyle(.sidebar)
@@ -55,9 +55,7 @@ struct GameListView: View {
                 }
                 .onKeyPress(action: { keyPress in
                     if(keyPress.key.character == "\u{7F}"){
-                        let index = playlistManager.selectedPlaylist.items.firstIndex(of : playlistManager.selectedGame)
-                        playlistManager.selectedPlaylist.deleteGame(playlistManager.selectedGame)
-                        selectedGame = playlistManager.selectedPlaylist.items[index!]
+                        deleteGame(playlistManager.selectedGame)
                         return .handled
                     }
                     if(keyPress.key.character == "\r"){
@@ -96,6 +94,14 @@ struct GameListView: View {
                 }
             }
         }
+    }
+    
+    
+    //선택된 게임 삭제
+    private func deleteGame(_ game: Game){
+        let index = playlistManager.selectedPlaylist.items.firstIndex(of : playlistManager.selectedGame)
+        playlistManager.selectedPlaylist.deleteGame(playlistManager.selectedGame)
+        selectedGame = playlistManager.selectedPlaylist.items[index!]
     }
 }
 
