@@ -4,12 +4,12 @@ struct GameView: View {
     @EnvironmentObject var playlistManager: PlaylistManager;
     
     var body: some View {
-        VStack(alignment:.leading){
+        VStack(alignment:.leading, spacing: 5){
             Text(playlistManager.selectedPlaylistItem.label)
             Text(playlistManager.selectedPlaylistItem.core_name)
             Text(playlistManager.selectedPlaylistItem.path)
             
-            Spacer().frame(height:20)
+            Spacer().frame(height:10)
             
             HStack{
                 Thumbnail(thumbnailType:.boxart , thumbnailPath: playlistManager.selectedPlaylistItem.label)

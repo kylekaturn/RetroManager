@@ -5,25 +5,30 @@ struct Thumbnail: View {
     var thumbnailPath: String
     
     var body: some View {
-        VStack{
-            Form{
-                Text(thumbnailType.toString())
-                    .fontWeight(.bold)
+        VStack(alignment:.center, spacing: 10){
+            Text(thumbnailType.toString())
+                .fontWeight(.bold)
+            
+            let fullPath = processFilename(thumbnailType: thumbnailType, filename: thumbnailPath)
+            if let image = NSImage(contentsOfFile: fullPath) {
+                Text("\(Int(image.size.width)) x \(Int(image.size.height))")
+                Image(nsImage: image)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 300, height: 300)
+            } else {
+                Text("")
+                Image(systemName: "exclamationmark.octagon.fill")
+                    .font(.system(size: 100))
+                    .frame(width: 300, height: 300)
+            }
+            Button("RESIZE"){
                 
-                let fullPath = processFilename(thumbnailType: thumbnailType, filename: thumbnailPath)
-                if let image = NSImage(contentsOfFile: fullPath) {
-                    Image(nsImage: image)
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 300, height: 300)
-                } else {
-                    Image(systemName: "exclamationmark.octagon.fill")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 300, height: 300)
-                }
-            }.formStyle(.grouped)
+            }
         }
+        .background(Color.gray.opacity(0.2))
+        .cornerRadius(10)
+        .padding(.trailing, 5)
     }
 }
 
