@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct Thumbnail: View {
+struct ThumbnailItem: View {
     var thumbnailType: ThumbnailType
     var thumbnailPath: String
     
@@ -43,5 +43,5 @@ func processFilename(thumbnailType: ThumbnailType, filename: String) -> String {
 }
 
 #Preview {
-    Thumbnail(thumbnailType:.snap , thumbnailPath: "ThumbnailPath")
+    ThumbnailItem(thumbnailType:.snap , thumbnailPath: "ThumbnailPath")
 }

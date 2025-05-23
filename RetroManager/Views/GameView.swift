@@ -12,9 +12,9 @@ struct GameView: View {
             Spacer().frame(height:10)
             
             HStack{
-                Thumbnail(thumbnailType:.boxart , thumbnailPath: playlistManager.selectedGame.label)
-                Thumbnail(thumbnailType:.snap , thumbnailPath: playlistManager.selectedGame.label)
-                Thumbnail(thumbnailType:.title , thumbnailPath: playlistManager.selectedGame.label)
+                ThumbnailItem(thumbnailType:.boxart , thumbnailPath: playlistManager.selectedGame.label)
+                ThumbnailItem(thumbnailType:.snap , thumbnailPath: playlistManager.selectedGame.label)
+                ThumbnailItem(thumbnailType:.title , thumbnailPath: playlistManager.selectedGame.label)
             }
             Spacer()
             HStack{
