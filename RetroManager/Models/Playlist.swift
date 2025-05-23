@@ -79,10 +79,6 @@ struct Playlist: Codable, Identifiable, Hashable{
     
     //Json 파일 저장
     func save() throws {
-        //        guard !file.isEmpty else {
-        //            throw NSError(domain: "PlaylistSaveError", code: 1, userInfo: [NSLocalizedDescriptionKey: "file 경로가 비어 있습니다."])
-        //        }
-        print(file)
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .withoutEscapingSlashes]
         let data = try encoder.encode(self)

@@ -1,4 +1,5 @@
 import SwiftUI
+import Foundation
 
 struct GameView: View {
     @EnvironmentObject var playlistManager: PlaylistManager;
@@ -41,7 +42,8 @@ struct GameView: View {
                     }
                 }
                 Button("Serach File"){
-                    if let query = playlistManager.selectedGame.path.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+                    if let label = URL(string: playlistManager.selectedGame.path)?.deletingPathExtension().lastPathComponent,
+                       let query = label.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
                        let url = URL(string: "\(google)\(query)") {
                         NSWorkspace.shared.open(url)
                     }
