@@ -4,7 +4,7 @@ class PlaylistManager: ObservableObject {
     
     @Published var playlists: [Playlist] = []
     @Published var selectedPlaylist: Playlist = Playlist()
-    @Published var selectedPlaylistItem: PlaylistItem = PlaylistItem()
+    @Published var selectedGame: Game = Game()
     let folderPath = "/Volumes/Depot/RetroArch/playlists"
     
     init() {
@@ -19,7 +19,7 @@ class PlaylistManager: ObservableObject {
                         playlist.file = fileURL.deletingPathExtension().lastPathComponent
                         playlists.append(playlist)
                         selectedPlaylist = playlists.first!
-                        selectedPlaylistItem = selectedPlaylist.items.first!
+                        selectedGame = selectedPlaylist.items.first!
                         print("Playlists Loaded : \(fileURL.path)")
                     } catch {
                         print("Couldn't decode playlist file : \(error)")

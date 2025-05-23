@@ -18,7 +18,7 @@ struct Playlist: Codable, Identifiable, Hashable{
     let scan_search_archives: Bool
     let scan_filter_dat_content: Bool
     let scan_overwrite_playlist: Bool
-    var items: [PlaylistItem]
+    var items: [Game]
     
     enum CodingKeys: String, CodingKey {
         case version
@@ -55,12 +55,12 @@ struct Playlist: Codable, Identifiable, Hashable{
         scan_search_archives = false
         scan_filter_dat_content = false
         scan_overwrite_playlist = false
-        items = [PlaylistItem(), PlaylistItem(), PlaylistItem()]
+        items = [Game(), Game(), Game()]
     }
     
     //아이템 추가
-    mutating func AddItem(_ item: PlaylistItem){
-        items.append(item)
+    mutating func AddGame(_ game: Game){
+        items.append(game)
         sort()
     }
     
@@ -82,7 +82,7 @@ struct Playlist: Codable, Identifiable, Hashable{
     }
 }
 
-struct PlaylistItem: Codable, Identifiable, Hashable{
+struct Game: Codable, Identifiable, Hashable{
     let id : UUID = UUID()
     let path: String
     let label: String

@@ -9,7 +9,7 @@ struct ContentView: View {
             GameListView()
         }detail:{
             GameView()
-                .navigationTitle(playlistManager.selectedPlaylistItem.label)
+                .navigationTitle(playlistManager.selectedGame.label)
                 .toolbar {
                     ToolbarItem(placement: .automatic) {
                         Button(action: {

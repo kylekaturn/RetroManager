@@ -5,16 +5,16 @@ struct GameView: View {
     
     var body: some View {
         VStack(alignment:.leading, spacing: 5){
-            Text(playlistManager.selectedPlaylistItem.label)
-            Text(playlistManager.selectedPlaylistItem.core_name)
-            Text(playlistManager.selectedPlaylistItem.path)
+            Text(playlistManager.selectedGame.label)
+            Text(playlistManager.selectedGame.core_name)
+            Text(playlistManager.selectedGame.path)
             
             Spacer().frame(height:10)
             
             HStack{
-                Thumbnail(thumbnailType:.boxart , thumbnailPath: playlistManager.selectedPlaylistItem.label)
-                Thumbnail(thumbnailType:.snap , thumbnailPath: playlistManager.selectedPlaylistItem.label)
-                Thumbnail(thumbnailType:.title , thumbnailPath: playlistManager.selectedPlaylistItem.label)
+                Thumbnail(thumbnailType:.boxart , thumbnailPath: playlistManager.selectedGame.label)
+                Thumbnail(thumbnailType:.snap , thumbnailPath: playlistManager.selectedGame.label)
+                Thumbnail(thumbnailType:.title , thumbnailPath: playlistManager.selectedGame.label)
             }
             Spacer()
             HStack{

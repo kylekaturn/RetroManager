@@ -4,7 +4,7 @@ struct GameListView: View {
     
     @EnvironmentObject var playlistManager: PlaylistManager;
     @State var selectedPlaylist: Playlist? = nil
-    @State var selectedPlaylistItem: PlaylistItem? = nil
+    @State var selectedGame: Game? = nil
     @State var searchText: String = ""
     
     var body: some View {
@@ -24,23 +24,22 @@ struct GameListView: View {
             }
             
             VStack{
-                List(selection: $selectedPlaylistItem){
-                    ForEach(playlistManager.selectedPlaylist.items, id : \.self) {item in
-                        Text("\(item.label)")
-                            .contextMenu{
-                                copyContextMenu(for: item)
-                            }
+                
+                List(selection: $selectedGame){
+                    ForEach(playlistManager.selectedPlaylist.items, id : \.self) {game in
+                        GameItem(game:game)
                     }
                 }
                 .listStyle(.sidebar)
                 .frame(minWidth:300)
                 .searchable(text: $searchText, placement:.sidebar, prompt: "Search")
                 .onAppear(){
-                    selectedPlaylistItem = playlistManager.selectedPlaylistItem
+                    selectedGame = playlistManager.selectedGame
                 }
-                .onChange(of: selectedPlaylistItem){
-                    playlistManager.selectedPlaylistItem = selectedPlaylistItem!
+                .onChange(of: selectedGame){
+                    playlistManager.selectedGame = selectedGame!
                 }
+                
                 Spacer()
                 HStack{
                     Spacer()
@@ -60,11 +59,11 @@ struct GameListView: View {
 
 //CopyItem context menu
 @ViewBuilder
-private func copyContextMenu(for item: PlaylistItem) -> some View {
+private func copyContextMenu(for game: Game) -> some View {
     Button("Copy Item") {
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .withoutEscapingSlashes]
-        if let data = try? encoder.encode(item),
+        if let data = try? encoder.encode(game),
            let jsonString = String(data: data, encoding: .utf8) {
             let pasteboard = NSPasteboard.general
             pasteboard.clearContents()
