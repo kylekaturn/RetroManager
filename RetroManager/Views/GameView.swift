@@ -2,6 +2,8 @@ import SwiftUI
 
 struct GameView: View {
     @EnvironmentObject var playlistManager: PlaylistManager;
+    @State var isExpanded = false
+    let google : String = "http://www.google.com/search?tbm=isch&q="
     
     var body: some View {
         VStack(alignment:.leading, spacing: 5){
@@ -16,10 +18,39 @@ struct GameView: View {
                 ThumbnailItem(thumbnailType:.snap , thumbnailPath: playlistManager.selectedGame.label)
                 ThumbnailItem(thumbnailType:.title , thumbnailPath: playlistManager.selectedGame.label)
             }
+            
+            Spacer().frame(height:10)
+            
+            VStack(alignment: .leading) {
+                Text(playlistManager.selectedGame.toJson())
+                    .padding(.top, 5)
+                
+            }
+            .padding()
+            .background(Color.gray.opacity(0.2))
+            .cornerRadius(10)
+            .frame(width:1000)
+            
             Spacer()
+            
             HStack{
+                Button("Search Label"){
+                    if let query = playlistManager.selectedGame.label.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+                       let url = URL(string: "\(google)\(query)") {
+                        NSWorkspace.shared.open(url)
+                    }
+                }
+                Button("Serach File"){
+                    if let query = playlistManager.selectedGame.path.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+                       let url = URL(string: "\(google)\(query)") {
+                        NSWorkspace.shared.open(url)
+                    }
+                }
+                
                 Spacer()
+                
                 Button("Bottom"){
+                    
                 }
             }
         }

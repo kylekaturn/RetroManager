@@ -79,9 +79,9 @@ struct Playlist: Codable, Identifiable, Hashable{
     
     //Json 파일 저장
     func save() throws {
-//        guard !file.isEmpty else {
-//            throw NSError(domain: "PlaylistSaveError", code: 1, userInfo: [NSLocalizedDescriptionKey: "file 경로가 비어 있습니다."])
-//        }
+        //        guard !file.isEmpty else {
+        //            throw NSError(domain: "PlaylistSaveError", code: 1, userInfo: [NSLocalizedDescriptionKey: "file 경로가 비어 있습니다."])
+        //        }
         print(file)
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .withoutEscapingSlashes]
@@ -117,5 +117,16 @@ struct Game: Codable, Identifiable, Hashable{
         core_name = "CoreName"
         crc32 = "CRC32"
         db_name = "DBName"
+    }
+    
+    func toJson() -> String {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.prettyPrinted, .withoutEscapingSlashes]
+        if let data = try? encoder.encode(self),
+           let jsonString = String(data: data, encoding: .utf8) {
+           return jsonString
+        }else{
+            return ""
+        }
     }
 }
