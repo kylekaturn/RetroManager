@@ -1,4 +1,5 @@
 import Foundation
+import AppKit
 
 class Playlist: Codable, Identifiable, Hashable{
     var id: UUID = UUID()
@@ -68,11 +69,20 @@ class Playlist: Codable, Identifiable, Hashable{
         hasher.combine(id)
     }
     
-    //아이템 추가
+    //게임 추가
     func addGame(_ game: Game){
         items.append(game)
         sort()
         isDirty = true
+    }
+    
+    //게임 추가(json)
+    func addGame(_ jsonString: String){
+        if let jsonData = jsonString.data(using: .utf8), let game = try? JSONDecoder().decode(Game.self, from: jsonData) {
+            addGame(game)
+        } else {
+            print("PasteGame Failed.")
+        }
     }
     
     //게임 제거
@@ -85,7 +95,7 @@ class Playlist: Codable, Identifiable, Hashable{
     
     //소팅
     func sort(){
-        items.sort { $0.label < $1.label }
+        items.sort { $0.label.lowercased() < $1.label.lowercased() }
     }
     
     //Json 파일 저장

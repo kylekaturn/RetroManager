@@ -43,7 +43,7 @@ struct GameListView: View {
                 
                 List(selection: $selectedGame){
                     ForEach(filteredGames, id : \.self) {game in
-                        GameItem(game:game, onDelete:deleteGame)
+                        GameItem(game:game, onCopy:copyGame, onPaste: pasteGame, onDelete:deleteGame)
                     }
                 }
                 .listStyle(.sidebar)
@@ -66,7 +66,28 @@ struct GameListView: View {
                     return .ignored
                 })
             }
+            .contextMenu{
+                Button("Paste Game") {
+                    //onCopy(game)
+                }
+            }
         }
+    }
+    
+    //선택된 게임 복제
+    private func copyGame(_ game: Game){
+        let jsonString = game.toJson()
+        let pasteboard = NSPasteboard.general
+        pasteboard.clearContents()
+        pasteboard.setString(jsonString, forType: .string)
+        print(jsonString)
+    }
+    
+    //게임 붙여넣기
+    private func pasteGame(_ game: Game){
+        let jsonString = NSPasteboard.general.string(forType: .string)
+        playlistManager.selectedPlaylist.addGame(jsonString!)
+        playlistManager.refresh()
     }
     
     //선택된 게임 삭제
@@ -75,37 +96,6 @@ struct GameListView: View {
         playlistManager.selectedPlaylist.deleteGame(playlistManager.selectedGame)
         selectedGame = playlistManager.selectedPlaylist.items[index!]
         playlistManager.refresh()
-    }
-    
-    //선택된 게임 복제
-    private func copyGame(_ game: Game){
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = [.prettyPrinted, .withoutEscapingSlashes]
-        if let data = try? encoder.encode(game),
-           let jsonString = String(data: data, encoding: .utf8) {
-            let pasteboard = NSPasteboard.general
-            pasteboard.clearContents()
-            pasteboard.setString(jsonString, forType: .string)
-            print(jsonString)
-        }
-    }
-    
-    //게임 붙여넣기
-    private func pasteGame(){
-        let pasteboard = NSPasteboard.general
-        if let jsonString = pasteboard.string(forType: .string) {
-            let decoder = JSONDecoder()
-            if let jsonData = jsonString.data(using: .utf8),
-               let game = try? decoder.decode(Game.self, from: jsonData) {
-                playlistManager.selectedPlaylist.addGame(game)
-                
-            } else {
-                print("PasteGame Failed.")
-            }
-        } else {
-            print("PasteGame Failed.")
-        }
-        print("PasteGame Succeed.")
     }
 }
 

@@ -3,6 +3,8 @@ import SwiftUI
 struct GameItem: View {
     
     var game: Game
+    var onCopy: (Game) -> Void = {_ in}
+    var onPaste: (Game) -> Void = {_ in}
     var onDelete: (Game) -> Void = {_ in}
     
     var body: some View {
@@ -10,15 +12,11 @@ struct GameItem: View {
             .contextMenu{
                 
                 Button("Copy Game") {
-                    let encoder = JSONEncoder()
-                    encoder.outputFormatting = [.prettyPrinted, .withoutEscapingSlashes]
-                    if let data = try? encoder.encode(game),
-                       let jsonString = String(data: data, encoding: .utf8) {
-                        let pasteboard = NSPasteboard.general
-                        pasteboard.clearContents()
-                        pasteboard.setString(jsonString, forType: .string)
-                        print(jsonString)
-                    }
+                    onCopy(game)
+                }
+                
+                Button("Paste Game"){
+                    onPaste(game)
                 }
                 
                 Button("Delete Game"){
