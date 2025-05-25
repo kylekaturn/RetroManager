@@ -1,24 +1,25 @@
 import Foundation
 
-struct Playlist: Codable, Identifiable, Hashable{
-    let id: UUID = UUID()
+class Playlist: Codable, Identifiable, Hashable{
+    var id: UUID = UUID()
     var label: String = ""
     var file: String = ""
-    let version: String
-    let default_core_path: String
-    let default_core_name: String
-    let label_display_mode: Int
-    let right_thumbnail_mode: Int
-    let left_thumbnail_mode: Int
-    let thumbnail_match_mode: Int
-    let sort_mode: Int
-    let scan_content_dir: String
-    let scan_file_exts: String
-    let scan_dat_file_path: String
-    let scan_search_recursively: Bool
-    let scan_search_archives: Bool
-    let scan_filter_dat_content: Bool
-    let scan_overwrite_playlist: Bool
+    var isDirty: Bool = false
+    var version: String
+    var default_core_path: String
+    var default_core_name: String
+    var label_display_mode: Int
+    var right_thumbnail_mode: Int
+    var left_thumbnail_mode: Int
+    var thumbnail_match_mode: Int
+    var sort_mode: Int
+    var scan_content_dir: String
+    var scan_file_exts: String
+    var scan_dat_file_path: String
+    var scan_search_recursively: Bool
+    var scan_search_archives: Bool
+    var scan_filter_dat_content: Bool
+    var scan_overwrite_playlist: Bool
     var items: [Game]
     
     enum CodingKeys: String, CodingKey {
@@ -59,21 +60,31 @@ struct Playlist: Codable, Identifiable, Hashable{
         items = [Game(), Game(), Game(), Game(), Game(), Game(), Game(), Game(), Game(), Game(), Game(), Game(), Game(), Game()]
     }
     
+    static func == (lhs: Playlist, rhs: Playlist) -> Bool {
+        return lhs.id == rhs.id
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
     //아이템 추가
-    mutating func addGame(_ game: Game){
+    func addGame(_ game: Game){
         items.append(game)
         sort()
+        isDirty = true
     }
     
     //게임 제거
-    mutating func deleteGame(_ game: Game){
+    func deleteGame(_ game: Game){
         if let index = items.firstIndex(of: game) {
             items.remove(at: index)
         }
+        isDirty = true
     }
     
     //소팅
-    mutating func sort(){
+    func sort(){
         items.sort { $0.label < $1.label }
     }
     
@@ -85,17 +96,18 @@ struct Playlist: Codable, Identifiable, Hashable{
         let url = URL(fileURLWithPath: file)
         try data.write(to: url)
         print("Save Complete")
+        isDirty = false
     }
 }
 
 struct Game: Codable, Identifiable, Hashable{
-    let id : UUID = UUID()
-    let path: String
-    let label: String
-    let core_path: String
-    let core_name: String
-    let crc32: String
-    let db_name: String
+    var id : UUID = UUID()
+    var path: String
+    var label: String
+    var core_path: String
+    var core_name: String
+    var crc32: String
+    var db_name: String
     
     enum CodingKeys: String, CodingKey {
         case path

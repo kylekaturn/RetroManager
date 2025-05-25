@@ -19,11 +19,12 @@ struct GameListView: View {
         HStack{
             List(selection: $selectedPlaylist){
                 ForEach(playlistManager.playlists, id : \.self){ item in
-                    Text("\(item.label)")
+                    Text("\(item.isDirty ? "*" : "")\(item.label)")
                 }
             }
             .listStyle(.sidebar)
             .frame(width:150)
+            .id(playlistManager.refreshID)
             .onAppear(){
                 selectedPlaylist = playlistManager.selectedPlaylist
                 Path.SYSTEM_PATH = selectedPlaylist!.label
@@ -64,44 +65,47 @@ struct GameListView: View {
                     }
                     return .ignored
                 })
-                
-                Spacer()
-                HStack{
-                    Spacer()
-                    
-                    Button(action: {
-                        do{
-                            try playlistManager.selectedPlaylist.save()
-                        }catch{
-                            print("Save Failed.")
-                        }
-                    }) {
-                        Image(systemName: "square.and.arrow.down")
-                            .imageScale(.large)
-                    }
-                    .buttonStyle(.automatic)
-                    .padding(5)
-                    
-                    Button(action: {
-                        print("Paste")
-                    }) {
-                        Image(systemName: "arrow.right.page.on.clipboard")
-                            .imageScale(.large)
-                    }
-                    .buttonStyle(.automatic)
-                    .padding(5)
-                    
-                }
             }
         }
     }
-    
     
     //선택된 게임 삭제
     private func deleteGame(_ game: Game){
         let index = playlistManager.selectedPlaylist.items.firstIndex(of : playlistManager.selectedGame)
         playlistManager.selectedPlaylist.deleteGame(playlistManager.selectedGame)
         selectedGame = playlistManager.selectedPlaylist.items[index!]
+        playlistManager.refresh()
+    }
+    
+    //선택된 게임 복제
+    private func copyGame(_ game: Game){
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.prettyPrinted, .withoutEscapingSlashes]
+        if let data = try? encoder.encode(game),
+           let jsonString = String(data: data, encoding: .utf8) {
+            let pasteboard = NSPasteboard.general
+            pasteboard.clearContents()
+            pasteboard.setString(jsonString, forType: .string)
+            print(jsonString)
+        }
+    }
+    
+    //게임 붙여넣기
+    private func pasteGame(){
+        let pasteboard = NSPasteboard.general
+        if let jsonString = pasteboard.string(forType: .string) {
+            let decoder = JSONDecoder()
+            if let jsonData = jsonString.data(using: .utf8),
+               let game = try? decoder.decode(Game.self, from: jsonData) {
+                playlistManager.selectedPlaylist.addGame(game)
+                
+            } else {
+                print("PasteGame Failed.")
+            }
+        } else {
+            print("PasteGame Failed.")
+        }
+        print("PasteGame Succeed.")
     }
 }
 

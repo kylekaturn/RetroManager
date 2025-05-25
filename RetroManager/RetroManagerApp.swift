@@ -9,15 +9,17 @@ struct RetroManagerApp: App {
             ContentView()
                 .environmentObject(playlistManager)
         }.commands{
-            CommandMenu("Task"){
-                Button("Task Command"){
-                    print("Task Command")
+            CommandGroup(replacing: .saveItem) {
+                Button("Save Playlist") {
+                    do {
+                        try playlistManager.selectedPlaylist.save()
+                        playlistManager.refresh()
+                    } catch {
+                        print("Save Failed.")
+                    }
                 }
-            }
-            CommandGroup(after: .appInfo){
-                Button("Custom Command"){
-                    print("Custom Command")
-                }
+                .keyboardShortcut("s", modifiers: [.command])
+                .disabled(playlistManager.selectedPlaylist.items.isEmpty)
             }
         }
         Settings{

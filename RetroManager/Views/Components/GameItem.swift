@@ -25,10 +25,6 @@ struct GameItem: View {
                     onDelete(game)
                 }
             }
-            .onKeyPress(.return) {
-                print("Return key pressed!")
-                return .handled
-            }
     }
 }
 

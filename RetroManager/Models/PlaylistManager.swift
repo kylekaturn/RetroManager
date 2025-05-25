@@ -5,6 +5,7 @@ class PlaylistManager: ObservableObject {
     @Published var playlists: [Playlist] = []
     @Published var selectedPlaylist: Playlist = Playlist()
     @Published var selectedGame: Game = Game()
+    @Published var refreshID: UUID = UUID()
     let folderPath = "/Volumes/Depot/RetroArch/playlists"
     
     init() {
@@ -15,7 +16,7 @@ class PlaylistManager: ObservableObject {
                 for fileURL in fileURLs {
                     do {
                         let data = try Data(contentsOf: URL(fileURLWithPath: fileURL.path))
-                        var playlist = try JSONDecoder().decode(Playlist.self, from: data)
+                        let playlist = try JSONDecoder().decode(Playlist.self, from: data)
                         playlist.label = fileURL.deletingPathExtension().lastPathComponent
                         playlist.file = fileURL.path
                         playlists.append(playlist)
@@ -40,9 +41,10 @@ class PlaylistManager: ObservableObject {
             playlists.append(Playlist())
             playlists.append(Playlist())
             playlists.append(Playlist())
-            
-           // selectedPlaylist = playlists.first!
-           // selectedPlaylistItem = selectedPlaylist.items.first!
         }
+    }
+    
+    func refresh(){
+        refreshID = UUID()
     }
 }
