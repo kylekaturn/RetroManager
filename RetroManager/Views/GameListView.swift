@@ -65,6 +65,8 @@ struct GameListView: View {
                     }
                     return .ignored
                 })
+                Spacer();
+                Text("\(playlistManager.selectedPlaylist.items.count) Games").padding(.bottom , 10)
             }
             .contextMenu{
                 Button("Paste Game") {
