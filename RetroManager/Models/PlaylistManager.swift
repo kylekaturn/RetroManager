@@ -6,12 +6,11 @@ class PlaylistManager: ObservableObject {
     @Published var selectedPlaylist: Playlist = Playlist()
     @Published var selectedGame: Game = Game()
     @Published var refreshID: UUID = UUID()
-    let folderPath = "/Volumes/Depot/RetroArch/playlists"
     
     init() {
         if(ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] != "1"){
             do {
-                let fileURLs = try FileManager.default.contentsOfDirectory(at: URL(fileURLWithPath: folderPath), includingPropertiesForKeys: nil)
+                let fileURLs = try FileManager.default.contentsOfDirectory(at: URL(fileURLWithPath: Path.PLAYLIST_PATH), includingPropertiesForKeys: nil)
                     .filter {$0.pathExtension == "lpl"}
                 for fileURL in fileURLs {
                     do {
