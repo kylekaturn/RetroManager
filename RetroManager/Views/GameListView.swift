@@ -5,6 +5,7 @@ struct GameListView: View {
     @EnvironmentObject var playlistManager: PlaylistManager;
     @State var selectedPlaylist: Playlist? = nil
     @State var selectedGame: Game? = nil
+    @State var renamingGame: Game? = nil
     @State var searchText: String = ""
     var filteredGames: [Game] {
         if searchText.isEmpty {
@@ -43,7 +44,15 @@ struct GameListView: View {
                 
                 List(selection: $selectedGame){
                     ForEach(filteredGames, id : \.self) {game in
-                        GameItem(game:game, onCopy:copyGame, onPaste: pasteGame, onDelete:deleteGame)
+                        GameItem(
+                            game:game,
+                            isRenaming: game == renamingGame,
+                            onCopy:copyGame,
+                            onPaste: pasteGame,
+                            onRename: renameGame,
+                            onRenameSubmit: onRenameSubmit,
+                            onRenameExit: onRenameExit,
+                            onDelete:deleteGame)
                     }
                 }
                 .listStyle(.sidebar)
@@ -56,22 +65,25 @@ struct GameListView: View {
                 }
                 .onKeyPress(action: { keyPress in
                     if(keyPress.key.character == "\u{7F}"){
-                        deleteGame(playlistManager.selectedGame)
-                        return .handled
+                        if(renamingGame == nil){
+                            deleteGame(selectedGame!)
+                            return .handled
+                        }else{
+                            return .ignored
+                        }
                     }
                     if(keyPress.key.character == "\r"){
-                        print("return")
-                        return .handled
+                        if(renamingGame == nil){
+                            renameGame(selectedGame!)
+                            return .handled
+                        }else{
+                            return .ignored
+                        }
                     }
                     return .ignored
                 })
                 Spacer();
                 Text("\(playlistManager.selectedPlaylist.items.count) Games").padding(.bottom , 10)
-            }
-            .contextMenu{
-                Button("Paste Game") {
-                    //onCopy(game)
-                }
             }
         }
     }
@@ -98,6 +110,20 @@ struct GameListView: View {
         playlistManager.selectedPlaylist.deleteGame(playlistManager.selectedGame)
         selectedGame = playlistManager.selectedPlaylist.items[index!]
         playlistManager.refresh()
+    }
+    
+    //게임 이름 변경
+    private func renameGame(_ game: Game){
+        selectedGame = game
+        renamingGame = game
+    }
+    
+    private func onRenameSubmit(_ game: Game){
+        renamingGame = nil
+    }
+    
+    private func onRenameExit(_ game: Game){
+        renamingGame = nil
     }
 }
 
