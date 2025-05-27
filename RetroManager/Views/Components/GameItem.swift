@@ -1,4 +1,5 @@
 import SwiftUI
+import AppKit
 
 struct GameItem: View {
     var game: Game
@@ -10,18 +11,27 @@ struct GameItem: View {
     var body: some View {
         Text("\(game.label)")
             .contextMenu{
-                Button("Copy Game") {
+                Button("Show in Finder") {
+                    let url = URL(fileURLWithPath: game.path)
+                    NSWorkspace.shared.activateFileViewerSelecting([url])
+                }
+                Divider()
+                Button("Open"){
+                    
+                }
+                Divider()
+                Button("Copy") {
                     onCopy(game)
                 }
-                Button("Paste Game"){
+                Button("Paste"){
                     onPaste(game)
                 }
                 Divider()
-                Button("Rename Game"){
+                Button("Rename"){
                     onRename(game)
                 }
                 Divider()
-                Button("Delete Game"){
+                Button("Delete"){
                     onDelete(game)
                 }
             }
