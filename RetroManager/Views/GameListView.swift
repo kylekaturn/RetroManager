@@ -5,8 +5,9 @@ struct GameListView: View {
     @EnvironmentObject var playlistManager: PlaylistManager;
     @State var selectedPlaylist: Playlist? = nil
     @State var selectedGame: Game? = nil
-    @State var renamingGame: Game? = nil
     @State var searchText: String = ""
+    @State private var showRenameSheet = false
+    @State private var renameLabel = ""
     var filteredGames: [Game] {
         if searchText.isEmpty {
             return playlistManager.selectedPlaylist.items
@@ -46,13 +47,10 @@ struct GameListView: View {
                     ForEach(filteredGames, id : \.self) {game in
                         GameItem(
                             game:game,
-                            isRenaming: game == renamingGame,
                             onCopy:copyGame,
                             onPaste: pasteGame,
                             onRename: renameGame,
-                            onRenameSubmit: onRenameSubmit,
-                            onRenameExit: onRenameExit,
-                            onDelete:deleteGame)
+                            onDelete: deleteGame)
                     }
                 }
                 .listStyle(.sidebar)
@@ -65,23 +63,21 @@ struct GameListView: View {
                 }
                 .onKeyPress(action: { keyPress in
                     if(keyPress.key.character == "\u{7F}"){
-                        if(renamingGame == nil){
-                            deleteGame(selectedGame!)
-                            return .handled
-                        }else{
-                            return .ignored
-                        }
-                    }
-                    if(keyPress.key.character == "\r"){
-                        if(renamingGame == nil){
-                            renameGame(selectedGame!)
-                            return .handled
-                        }else{
-                            return .ignored
-                        }
+                        deleteGame(selectedGame!)
                     }
                     return .ignored
                 })
+                .sheet(isPresented: $showRenameSheet) {
+                    RenamePopup(
+                        text: $renameLabel,
+                        onCommit: {
+                            selectedGame!.label = renameLabel
+                            showRenameSheet = false
+                            playlistManager.refresh()
+                        },
+                        onCancel: { showRenameSheet = false }
+                    )
+                }
                 Spacer();
                 Text("\(playlistManager.selectedPlaylist.items.count) Games").padding(.bottom , 10)
             }
@@ -115,15 +111,8 @@ struct GameListView: View {
     //게임 이름 변경
     private func renameGame(_ game: Game){
         selectedGame = game
-        renamingGame = game
-    }
-    
-    private func onRenameSubmit(_ game: Game){
-        renamingGame = nil
-    }
-    
-    private func onRenameExit(_ game: Game){
-        renamingGame = nil
+        renameLabel = game.label
+        showRenameSheet = true
     }
 }
 
