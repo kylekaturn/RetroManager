@@ -29,6 +29,10 @@ struct ThumbnailItem: View {
                 Image(systemName: "exclamationmark.octagon.fill")
                     .font(.system(size: 100))
                     .frame(width: 300, height: 300)
+                    .onAppear(){
+                        width = 0
+                        height = 0
+                    }
             }
             
             Spacer().frame(height: 10)
@@ -39,11 +43,13 @@ struct ThumbnailItem: View {
         .padding(.trailing, 5)
         .contextMenu{
             Button("Show in Finder") {
+                if(width==0){return}
                 let url = URL(fileURLWithPath: thumbnailPath)
                 NSWorkspace.shared.activateFileViewerSelecting([url])
             }
             Divider()
             Button("Copy") {
+                if(width==0){return}
                 if let image = NSImage(contentsOfFile: thumbnailPath) {
                     Utils.copyImageToClipboard(image)
                 }
@@ -54,10 +60,12 @@ struct ThumbnailItem: View {
             }
             Divider()
             Button("Resize"){
+                if(width==0){return}
                 showResizeSheet = true
             }
             Divider()
             Button("Delete"){
+                if(width==0){return}
                 try? FileManager.default.removeItem(atPath: thumbnailPath)
                 id = UUID()
             }

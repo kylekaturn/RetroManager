@@ -13,9 +13,11 @@ struct ContentView: View {
                 .toolbar {
                     ToolbarItem(placement: .automatic) {
                         Button(action: {
-                            print("Setting Clicked")
+                            Utils.launchRetroArch(
+                                romPath: playlistManager.selectedGame.path,
+                                corePath: playlistManager.selectedPlaylist.default_core_path)
                         }) {
-                            Image(systemName: "gearshape")
+                            Image(systemName: "play.fill")
                         }
                     }
                 }

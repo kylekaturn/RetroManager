@@ -80,6 +80,26 @@ final class Utils {
             print("Resize image failed: \(error)")
         }
     }
+    
+    static func launchRetroArch(romPath: String, corePath: String) {
+        let task = Process()
+        // RetroArch 실행 파일 경로 (macOS 기본 설치 경로)
+        task.launchPath = "/Applications/RetroArch.app/Contents/MacOS/RetroArch"
+        // 명령줄 인자
+        task.arguments = [
+            "-L", corePath,
+            romPath
+        ]
+        // 원하는 옵션 추가 가능
+        // 예: 전체화면으로 실행하려면 task.arguments?.append("--fullscreen")
+        // 비동기로 실행 (동기로 하고 싶으면 task.waitUntilExit())
+        do {
+            try task.run()
+            print("RetroArch 실행됨")
+        } catch {
+            print("RetroArch 실행 실패: \(error)")
+        }
+    }
 
     /// 현재 날짜를 문자열로 반환 (예: "2025-05-06")
     static func currentDateString(format: String = "yyyy-MM-dd") -> String {

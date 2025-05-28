@@ -16,8 +16,8 @@ struct GameView: View {
             
             HStack{
                 ThumbnailItem(thumbnailType:.boxart , thumbnailLabel: playlistManager.selectedGame.label)
-                ThumbnailItem(thumbnailType:.snap , thumbnailLabel: playlistManager.selectedGame.label)
                 ThumbnailItem(thumbnailType:.title , thumbnailLabel: playlistManager.selectedGame.label)
+                ThumbnailItem(thumbnailType:.snap , thumbnailLabel: playlistManager.selectedGame.label)
             }
             
             Spacer().frame(height:10)
@@ -43,10 +43,6 @@ struct GameView: View {
                 }
                 
                 Spacer()
-                
-                Button("Bottom"){
-                    
-                }
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
