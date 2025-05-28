@@ -4,18 +4,26 @@ struct ThumbnailItem: View {
     var thumbnailType: ThumbnailType
     var thumbnailLabel: String
     var thumbnailPath: String {Path.getThumbnailPath(thumbnailType: thumbnailType, label: thumbnailLabel)}
-    @State var refreshID: UUID = UUID()
+    @State var width: Int = 0
+    @State var height: Int = 0
+    @State private var showResizeSheet = false
+    @State var id: UUID = UUID()
     
     var body: some View {
         VStack(alignment:.center, spacing: 10){
             Text(thumbnailType.toString()).fontWeight(.bold)
             
-            if let image = NSImage(contentsOfFile: thumbnailPath) {
-                Text("\(Int(image.size.width)) x \(Int(image.size.height))")
+            if let image = NSImage(contentsOfFile: thumbnailPath),
+               let cgImage = image.cgImage(forProposedRect: nil, context: nil, hints: nil){
+                Text("\(String(cgImage.width)) x \(String(cgImage.height))")
                 Image(nsImage: image)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 300, height: 300)
+                    .onAppear(){
+                        width = Int(image.size.width)
+                        height = Int(image.size.height)
+                    }
             } else {
                 Text("")
                 Image(systemName: "exclamationmark.octagon.fill")
@@ -25,7 +33,7 @@ struct ThumbnailItem: View {
             
             Spacer().frame(height: 10)
         }
-        .id(refreshID)
+        .id(id)
         .background(Color.gray.opacity(0.2))
         .cornerRadius(10)
         .padding(.trailing, 5)
@@ -37,40 +45,31 @@ struct ThumbnailItem: View {
             Divider()
             Button("Copy") {
                 if let image = NSImage(contentsOfFile: thumbnailPath) {
-                    copyImageToClipboard(image)
+                    Utils.copyImageToClipboard(image)
                 }
             }
             Button("Paste"){
-                pasteImageFromClipboard(thumbnailPath)
+                Utils.saveImageFromClipboard(thumbnailPath)
+                id = UUID()
             }
             Divider()
-        }
-    }
-    
-    func copyImageToClipboard(_ image: NSImage) {
-        let pasteboard = NSPasteboard.general
-        pasteboard.clearContents()
-        pasteboard.writeObjects([image])
-    }
-    
-    func pasteImageFromClipboard(_ path: String) {
-        let pasteboard = NSPasteboard.general
-        let classes = [NSImage.self]
-        if let items = pasteboard.readObjects(forClasses: classes, options: nil) as? [NSImage],
-           let image = items.first {
-            if let tiffData = image.tiffRepresentation,
-               let bitmap = NSBitmapImageRep(data: tiffData),
-               let pngData = bitmap.representation(using: .png, properties: [:]) {
-                do {
-                    try pngData.write(to: URL(fileURLWithPath: path))
-                    print("이미지 저장 완료: \(path)")
-                    refreshID = UUID()
-                } catch {
-                    print("이미지 저장 실패: \(error)")
-                }
+            Button("Resize"){
+                showResizeSheet = true
             }
-        } else {
-            print("클립보드에 이미지 없음")
+        }
+        .sheet(isPresented: $showResizeSheet) {
+            ResizePopup(
+                width : $width,
+                height : $height,
+                onCommit: {
+                    showResizeSheet = false
+                    if let image = NSImage(contentsOfFile: thumbnailPath) {
+                        Utils.saveImage(image: image, path:thumbnailPath, width:width, height:height)
+                    }
+                    id = UUID()
+                },
+                onCancel: { showResizeSheet = false }
+            )
         }
     }
 }
