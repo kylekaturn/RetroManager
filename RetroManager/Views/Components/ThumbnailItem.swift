@@ -56,6 +56,11 @@ struct ThumbnailItem: View {
             Button("Resize"){
                 showResizeSheet = true
             }
+            Divider()
+            Button("Delete"){
+                try? FileManager.default.removeItem(atPath: thumbnailPath)
+                id = UUID()
+            }
         }
         .sheet(isPresented: $showResizeSheet) {
             ResizePopup(
