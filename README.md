@@ -11,3 +11,4 @@ A standalone macOS application for editing and managing RetroArch playlists.
 - Rename game
 - Paste thumbnail image from clipboard
 - Resize thumbnail
+- Instant play game
