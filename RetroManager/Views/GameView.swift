@@ -15,22 +15,15 @@ struct GameView: View {
             Spacer().frame(height:10)
             
             HStack{
-                ThumbnailItem(thumbnailType:.boxart , thumbnailPath: playlistManager.selectedGame.label)
-                ThumbnailItem(thumbnailType:.snap , thumbnailPath: playlistManager.selectedGame.label)
-                ThumbnailItem(thumbnailType:.title , thumbnailPath: playlistManager.selectedGame.label)
+                ThumbnailItem(thumbnailType:.boxart , thumbnailLabel: playlistManager.selectedGame.label)
+                ThumbnailItem(thumbnailType:.snap , thumbnailLabel: playlistManager.selectedGame.label)
+                ThumbnailItem(thumbnailType:.title , thumbnailLabel: playlistManager.selectedGame.label)
             }
             
             Spacer().frame(height:10)
             
-            VStack(alignment: .leading) {
-                Text(playlistManager.selectedGame.toJson())
-                    .padding(.top, 5)
-                
-            }
-            .padding()
-            .background(Color.gray.opacity(0.2))
-            .cornerRadius(10)
-            .frame(width:1000)
+            Text("JSON").font(.headline)
+            Text(playlistManager.selectedGame.toJson())
             
             Spacer()
             

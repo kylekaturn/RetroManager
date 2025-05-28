@@ -33,7 +33,7 @@ struct GameItem: View {
                 Divider()
                 Button("Delete"){
                     onDelete(game)
-                }
+                }.keyboardShortcut(.deleteForward)
             }
     }
 }

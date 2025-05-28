@@ -2,15 +2,14 @@ import SwiftUI
 
 struct ThumbnailItem: View {
     var thumbnailType: ThumbnailType
-    var thumbnailPath: String
+    var thumbnailLabel: String
+    var thumbnailPath: String {Path.getThumbnailPath(thumbnailType: thumbnailType, label: thumbnailLabel)}
     
     var body: some View {
         VStack(alignment:.center, spacing: 10){
-            Text(thumbnailType.toString())
-                .fontWeight(.bold)
+            Text(thumbnailType.toString()).fontWeight(.bold)
             
-            let fullPath = Path.getThumbnailPath(thumbnailType: thumbnailType, label: thumbnailPath)
-            if let image = NSImage(contentsOfFile: fullPath) {
+            if let image = NSImage(contentsOfFile: thumbnailPath) {
                 Text("\(Int(image.size.width)) x \(Int(image.size.height))")
                 Image(nsImage: image)
                     .resizable()
@@ -22,16 +21,29 @@ struct ThumbnailItem: View {
                     .font(.system(size: 100))
                     .frame(width: 300, height: 300)
             }
-            Button("RESIZE"){
-                
-            }
+            
+            Spacer().frame(height: 10)
         }
         .background(Color.gray.opacity(0.2))
         .cornerRadius(10)
         .padding(.trailing, 5)
+        .contextMenu{
+            Button("Show in Finder") {
+                let url = URL(fileURLWithPath: thumbnailPath)
+                NSWorkspace.shared.activateFileViewerSelecting([url])
+            }
+            Divider()
+            Button("Copy") {
+                //onCopy(game)
+            }
+            Button("Paste"){
+               // onPaste(game)
+            }
+            Divider()
+        }
     }
 }
 
 #Preview {
-    ThumbnailItem(thumbnailType:.snap , thumbnailPath: "ThumbnailPath")
+    ThumbnailItem(thumbnailType:.snap , thumbnailLabel: "ThumbnailLabel")
 }

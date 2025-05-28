@@ -61,19 +61,22 @@ struct GameListView: View {
                 .onChange(of: selectedGame){
                     playlistManager.selectedGame = selectedGame!
                 }
-                .onKeyPress(action: { keyPress in
-                    if(keyPress.key.character == "\u{7F}"){
-                        deleteGame(selectedGame!)
-                    }
-                    return .ignored
-                })
+//                .onKeyPress(action: { keyPress in
+//                    if(keyPress.key.character == "\u{7F}"){
+//                        deleteGame(selectedGame!)
+//                    }
+//                    return .ignored
+//                })
                 .sheet(isPresented: $showRenameSheet) {
                     RenamePopup(
                         text: $renameLabel,
                         onCommit: {
-                            selectedGame!.label = renameLabel
                             showRenameSheet = false
-                            playlistManager.refresh()
+                            if(selectedGame!.label != renameLabel){
+                                selectedGame!.label = renameLabel
+                                playlistManager.selectedPlaylist.isDirty = true
+                                playlistManager.refresh()
+                            }
                         },
                         onCancel: { showRenameSheet = false }
                     )
