@@ -4,6 +4,7 @@ struct ThumbnailItem: View {
     var thumbnailType: ThumbnailType
     var thumbnailLabel: String
     var thumbnailPath: String {Path.getThumbnailPath(thumbnailType: thumbnailType, label: thumbnailLabel)}
+    @State var refreshID: UUID = UUID()
     
     var body: some View {
         VStack(alignment:.center, spacing: 10){
@@ -24,6 +25,7 @@ struct ThumbnailItem: View {
             
             Spacer().frame(height: 10)
         }
+        .id(refreshID)
         .background(Color.gray.opacity(0.2))
         .cornerRadius(10)
         .padding(.trailing, 5)
@@ -34,12 +36,41 @@ struct ThumbnailItem: View {
             }
             Divider()
             Button("Copy") {
-                //onCopy(game)
+                if let image = NSImage(contentsOfFile: thumbnailPath) {
+                    copyImageToClipboard(image)
+                }
             }
             Button("Paste"){
-               // onPaste(game)
+                pasteImageFromClipboard(thumbnailPath)
             }
             Divider()
+        }
+    }
+    
+    func copyImageToClipboard(_ image: NSImage) {
+        let pasteboard = NSPasteboard.general
+        pasteboard.clearContents()
+        pasteboard.writeObjects([image])
+    }
+    
+    func pasteImageFromClipboard(_ path: String) {
+        let pasteboard = NSPasteboard.general
+        let classes = [NSImage.self]
+        if let items = pasteboard.readObjects(forClasses: classes, options: nil) as? [NSImage],
+           let image = items.first {
+            if let tiffData = image.tiffRepresentation,
+               let bitmap = NSBitmapImageRep(data: tiffData),
+               let pngData = bitmap.representation(using: .png, properties: [:]) {
+                do {
+                    try pngData.write(to: URL(fileURLWithPath: path))
+                    print("이미지 저장 완료: \(path)")
+                    refreshID = UUID()
+                } catch {
+                    print("이미지 저장 실패: \(error)")
+                }
+            }
+        } else {
+            print("클립보드에 이미지 없음")
         }
     }
 }
