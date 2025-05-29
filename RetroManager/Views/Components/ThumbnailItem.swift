@@ -34,8 +34,18 @@ struct ThumbnailItem: View {
                         height = 0
                     }
             }
-            
             Spacer().frame(height: 10)
+            HStack{
+                Button("RESIZE"){
+                    if(width==0){return}
+                    showResizeSheet = true
+                }
+                Button("PASTE"){
+                    Utils.saveImageFromClipboard(thumbnailPath)
+                    id = UUID()
+                }
+            }
+            Spacer().frame(height: 5)
         }
         .id(id)
         .background(Color.gray.opacity(0.2))
