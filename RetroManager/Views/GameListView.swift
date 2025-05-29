@@ -74,6 +74,7 @@ struct GameListView: View {
                             showRenameSheet = false
                             if(selectedGame!.label != renameLabel){
                                 selectedGame!.rename(renameLabel)
+                                playlistManager.selectedPlaylist.sort()
                                 playlistManager.selectedPlaylist.isDirty = true
                                 playlistManager.refresh()
                             }
