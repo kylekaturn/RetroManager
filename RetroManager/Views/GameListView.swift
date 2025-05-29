@@ -73,7 +73,7 @@ struct GameListView: View {
                         onCommit: {
                             showRenameSheet = false
                             if(selectedGame!.label != renameLabel){
-                                selectedGame!.label = renameLabel
+                                selectedGame!.rename(renameLabel)
                                 playlistManager.selectedPlaylist.isDirty = true
                                 playlistManager.refresh()
                             }

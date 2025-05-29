@@ -2,7 +2,26 @@ import Foundation
 import SwiftUI
 
 final class Utils {
+
+    //Rename file with overwrite
+    static func renameFile(from oldPath: String, to newPath: String) {
+        let fileManager = FileManager.default
+        
+        //기존파일이 없으면 리턴
+        if(!fileManager.fileExists(atPath: oldPath)) {return}
+
+        //새 파일이 이미 있으면 삭제(Overwrite)
+        if fileManager.fileExists(atPath: newPath) {
+            try! fileManager.removeItem(atPath: newPath)
+        }
+        print(oldPath)
+        print(newPath)
+
+        //파일 이름 변경(이동)
+        try! fileManager.moveItem(atPath: oldPath, toPath: newPath)
+    }
     
+
     //Get files from folder
     static func getFilesFromFolder(_ folderPath: String) -> [String] {
         let fileManager = FileManager.default

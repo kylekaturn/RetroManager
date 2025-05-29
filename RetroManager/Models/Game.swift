@@ -37,6 +37,19 @@ class Game: Codable, Identifiable, Hashable{
         hasher.combine(id)
     }
     
+    func rename(_ newLabel:String){
+        Utils.renameFile(
+            from: Path.getThumbnailPath(thumbnailType: ThumbnailType.boxart, label: label),
+            to: Path.getThumbnailPath(thumbnailType: ThumbnailType.boxart, label: newLabel))
+        Utils.renameFile(
+            from: Path.getThumbnailPath(thumbnailType: ThumbnailType.snap, label: label),
+            to: Path.getThumbnailPath(thumbnailType: ThumbnailType.snap, label: newLabel))
+        Utils.renameFile(
+            from: Path.getThumbnailPath(thumbnailType: ThumbnailType.title, label: label),
+            to: Path.getThumbnailPath(thumbnailType: ThumbnailType.title, label: newLabel))
+        label = newLabel
+    }
+    
     //json 스트링을 변환
     func toJson() -> String {
         let encoder = JSONEncoder()
