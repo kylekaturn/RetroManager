@@ -2,6 +2,7 @@ import SwiftUI
 
 @main
 struct RetroManagerApp: App {
+    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject var playlistManager: PlaylistManager;
     
     init(){
@@ -33,5 +34,11 @@ struct RetroManagerApp: App {
         Settings{
             SettingsView().frame(width: 300, height: 300)
         }
+    }
+}
+
+class AppDelegate: NSObject, NSApplicationDelegate {
+    func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
+        return true
     }
 }

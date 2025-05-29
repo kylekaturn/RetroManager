@@ -5,6 +5,7 @@ struct GameView: View {
     @EnvironmentObject var playlistManager: PlaylistManager;
     @State var isExpanded = false
     let google : String = "http://www.google.com/search?tbm=isch&q="
+    let launchbox : String = "https://gamesdb.launchbox-app.com/games/results/"
     
     var body: some View {
         VStack(alignment:.leading, spacing: 5){
@@ -38,6 +39,12 @@ struct GameView: View {
                     if let label = URL(string: playlistManager.selectedGame.path)?.deletingPathExtension().lastPathComponent,
                        let query = label.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
                        let url = URL(string: "\(google)\(query)") {
+                        NSWorkspace.shared.open(url)
+                    }
+                }
+                Button("Serach LaunchBox"){
+                    if let query = playlistManager.selectedGame.label.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+                       let url = URL(string: "\(launchbox)\(query)") {
                         NSWorkspace.shared.open(url)
                     }
                 }
