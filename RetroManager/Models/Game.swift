@@ -9,6 +9,7 @@ class Game: Codable, Identifiable, Hashable{
     var core_name: String
     var crc32: String
     var db_name: String
+    var romName: String {URL(fileURLWithPath: path).deletingPathExtension().lastPathComponent}
     
     enum CodingKeys: String, CodingKey {
         case path
@@ -42,7 +43,7 @@ class Game: Codable, Identifiable, Hashable{
         encoder.outputFormatting = [.prettyPrinted, .withoutEscapingSlashes]
         if let data = try? encoder.encode(self),
            let jsonString = String(data: data, encoding: .utf8) {
-           return jsonString
+            return jsonString
         }else{
             return ""
         }

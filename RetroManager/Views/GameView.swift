@@ -3,9 +3,9 @@ import Foundation
 
 struct GameView: View {
     @EnvironmentObject var playlistManager: PlaylistManager;
-    @State var isExpanded = false
     let google : String = "http://www.google.com/search?tbm=isch&q="
     let launchbox : String = "https://gamesdb.launchbox-app.com/games/results/"
+    @State var screenshots: [String] = []
     
     var body: some View {
         VStack(alignment:.leading, spacing: 5){
@@ -19,6 +19,15 @@ struct GameView: View {
                 ThumbnailItem(thumbnailType:.boxart , thumbnailLabel: playlistManager.selectedGame.label)
                 ThumbnailItem(thumbnailType:.title , thumbnailLabel: playlistManager.selectedGame.label)
                 ThumbnailItem(thumbnailType:.snap , thumbnailLabel: playlistManager.selectedGame.label)
+            }
+            
+            Spacer().frame(height:10)
+            
+            Text("SCREENSHOTS").font(.headline)
+            HStack{
+                ForEach(screenshots, id: \.self) { fileName in
+                    ScreenshotItem(screenshotPath: Path.SCREENSHOT_PATH + "/" + fileName)
+                }
             }
             
             Spacer().frame(height:10)
@@ -51,6 +60,14 @@ struct GameView: View {
                 
                 Spacer()
             }
+        }
+        .onAppear(){
+            let files = Utils.getPNGFilesFromFolder(Path.SCREENSHOT_PATH)
+            screenshots = files.filter { $0.contains(playlistManager.selectedGame.romName) }
+        }
+        .onChange(of:playlistManager.selectedGame){
+            let files = Utils.getPNGFilesFromFolder(Path.SCREENSHOT_PATH)
+            screenshots = files.filter { $0.contains(playlistManager.selectedGame.romName) }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .padding(15)

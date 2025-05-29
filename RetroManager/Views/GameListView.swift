@@ -93,7 +93,6 @@ struct GameListView: View {
         let pasteboard = NSPasteboard.general
         pasteboard.clearContents()
         pasteboard.setString(jsonString, forType: .string)
-        print(jsonString)
     }
     
     //게임 붙여넣기

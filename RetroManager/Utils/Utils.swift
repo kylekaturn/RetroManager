@@ -3,6 +3,32 @@ import SwiftUI
 
 final class Utils {
     
+    //Get files from folder
+    static func getFilesFromFolder(_ folderPath: String) -> [String] {
+        let fileManager = FileManager.default
+        do {
+            let files = try fileManager.contentsOfDirectory(atPath: folderPath)
+            return files
+        } catch {
+            print("폴더 읽기 실패: \(error)")
+            return []
+        }
+    }
+    
+    //Get PNG files from folder.
+    static func getPNGFilesFromFolder(_ folderPath: String) -> [String] {
+        let fileManager = FileManager.default
+        do {
+            let files = try fileManager.contentsOfDirectory(atPath: folderPath)
+            // 확장자가 png인 파일만 필터링 (대소문자 구분 없이)
+            let pngFiles = files.filter { $0.lowercased().hasSuffix(".png") }
+            return pngFiles
+        } catch {
+            print("폴더 읽기 실패: \(error)")
+            return []
+        }
+    }
+    
     //Copy image to a clipboard
     static func copyImageToClipboard(_ image: NSImage) {
         let pasteboard = NSPasteboard.general
