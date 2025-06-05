@@ -12,8 +12,7 @@ struct GameItem: View {
         Text("\(game.label)")
             .contextMenu{
                 Button("Show in Finder") {
-                    let url = URL(fileURLWithPath: game.path)
-                    NSWorkspace.shared.activateFileViewerSelecting([url])
+                    Utils.openFinder(atPath: game.path)
                 }
                 Divider()
                 Button("Open"){

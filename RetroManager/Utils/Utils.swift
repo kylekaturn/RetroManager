@@ -2,6 +2,11 @@ import Foundation
 import SwiftUI
 
 final class Utils {
+    
+    static func openFinder(atPath path: String) {
+        let url = URL(fileURLWithPath: path)
+        NSWorkspace.shared.activateFileViewerSelecting([url])
+    }
 
     //Rename file with overwrite
     static func renameFile(from oldPath: String, to newPath: String) {

@@ -21,7 +21,7 @@ struct GameListView: View {
         HStack{
             List(selection: $selectedPlaylist){
                 ForEach(playlistManager.playlists, id : \.self){ item in
-                    Text("\(item.isDirty ? "*" : "")\(item.label)")
+                    PlaylistItem(playlist: item)
                 }
             }
             .listStyle(.sidebar)
