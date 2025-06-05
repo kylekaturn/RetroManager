@@ -32,6 +32,23 @@ struct ResizePopup: View {
                     id = UUID()
                 }
             }
+            HStack{
+                Button("25%"){
+                    width = Int(Double(width) * 0.25)
+                    height = Int(Double(height) * 0.25)
+                    id = UUID()
+                }
+                Button("50%"){
+                    width = Int(Double(width) * 0.5)
+                    height = Int(Double(height) * 0.5)
+                    id = UUID()
+                }
+                Button("75%"){
+                    width = Int(Double(width) * 0.75)
+                    height = Int(Double(height) * 0.75)
+                    id = UUID()
+                }
+            }
             Spacer().frame(height:20)
             HStack{
                 Text("Width")
