@@ -6,7 +6,8 @@ struct GameListView: View {
     @State var selectedPlaylist: Playlist? = nil
     @State var selectedGame: Game? = nil
     @State var searchText: String = ""
-    @State private var showRenameSheet = false
+    @State private var showRenamePopup = false
+    @State private var showEditPopup = false
     @State private var renameLabel = ""
     var filteredGames: [Game] {
         if searchText.isEmpty {
@@ -50,6 +51,7 @@ struct GameListView: View {
                             onCopy:copyGame,
                             onPaste: pasteGame,
                             onRename: renameGame,
+                            onEdit: editGame,
                             onDelete: deleteGame)
                     }
                 }
@@ -61,26 +63,17 @@ struct GameListView: View {
                 .onChange(of: selectedGame){
                     playlistManager.selectedGame = selectedGame!
                 }
-//                .onKeyPress(action: { keyPress in
-//                    if(keyPress.key.character == "\u{7F}"){
-//                        deleteGame(selectedGame!)
-//                    }
-//                    return .ignored
-//                })
-                .sheet(isPresented: $showRenameSheet) {
-                    RenamePopup(
-                        text: $renameLabel,
-                        onCommit: {
-                            showRenameSheet = false
-                            if(selectedGame!.label != renameLabel){
-                                selectedGame!.rename(renameLabel)
-                                playlistManager.selectedPlaylist.sort()
-                                playlistManager.selectedPlaylist.isDirty = true
-                                playlistManager.refresh()
-                            }
-                        },
-                        onCancel: { showRenameSheet = false }
-                    )
+                //                .onKeyPress(action: { keyPress in
+                //                    if(keyPress.key.character == "\u{7F}"){
+                //                        deleteGame(selectedGame!)
+                //                    }
+                //                    return .ignored
+                //                })
+                .sheet(isPresented: $showRenamePopup) {
+                    RenamePopup(onClose: {showRenamePopup = false})
+                }
+                .sheet(isPresented: $showEditPopup){
+                    EditPopup(onClose: {showRenamePopup = false})
                 }
                 Spacer();
                 Text("\(playlistManager.selectedPlaylist.items.count) Games").padding(.bottom , 10)
@@ -115,7 +108,12 @@ struct GameListView: View {
     private func renameGame(_ game: Game){
         selectedGame = game
         renameLabel = game.label
-        showRenameSheet = true
+        showRenamePopup = true
+    }
+    
+    private func editGame(_ game: Game){
+        selectedGame = game
+        showEditPopup = true
     }
 }
 

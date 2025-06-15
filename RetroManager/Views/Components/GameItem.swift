@@ -6,6 +6,7 @@ struct GameItem: View {
     var onCopy: (Game) -> Void = {_ in}
     var onPaste: (Game) -> Void = {_ in}
     var onRename: (Game) -> Void = {_ in}
+    var onEdit: (Game) -> Void = {_ in}
     var onDelete: (Game) -> Void = {_ in}
     
     var body: some View {
@@ -29,10 +30,13 @@ struct GameItem: View {
                 Button("Rename"){
                     onRename(game)
                 }
+                Button("Edit"){
+                    onEdit(game)
+                }
                 Divider()
                 Button("Delete"){
                     onDelete(game)
-                }.keyboardShortcut(.deleteForward)
+                }
             }
     }
 }

@@ -60,6 +60,7 @@ struct ResizePopup: View {
             HStack {
                 Button("Cancel") { onCancel() }
                 Button("OK") { onCommit() }
+                    .keyboardShortcut(.defaultAction)
             }
         }
         .padding()
