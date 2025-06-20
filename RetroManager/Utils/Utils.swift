@@ -7,6 +7,22 @@ final class Utils {
         let url = URL(fileURLWithPath: path)
         NSWorkspace.shared.activateFileViewerSelecting([url])
     }
+    
+    //Rename file with overwrite
+    static func copyFile(from oldPath: String, to newPath: String) {
+        let fileManager = FileManager.default
+        
+        //기존파일이 없으면 리턴
+        if(!fileManager.fileExists(atPath: oldPath)) {return}
+
+        //새 파일이 이미 있으면 삭제(Overwrite)
+        if fileManager.fileExists(atPath: newPath) {
+            try! fileManager.removeItem(atPath: newPath)
+        }
+
+        //파일 이름 변경
+        try! fileManager.copyItem(atPath: oldPath, toPath: newPath)
+    }
 
     //Rename file with overwrite
     static func renameFile(from oldPath: String, to newPath: String) {
@@ -19,8 +35,6 @@ final class Utils {
         if fileManager.fileExists(atPath: newPath) {
             try! fileManager.removeItem(atPath: newPath)
         }
-        print(oldPath)
-        print(newPath)
 
         //파일 이름 변경(이동)
         try! fileManager.moveItem(atPath: oldPath, toPath: newPath)

@@ -108,4 +108,20 @@ class Playlist: Codable, Identifiable, Hashable{
         print("Save Complete")
         isDirty = false
     }
+    
+    //롬파일 백업
+    func backupRoms() {
+        let panel = NSOpenPanel()
+        panel.canChooseFiles = false
+        panel.canChooseDirectories = true
+        panel.allowsMultipleSelection = false
+        panel.prompt = "Select Folder"
+
+        if panel.runModal() == .OK, let destinationURL = panel.url {
+            items.forEach { game in
+                //print(destinationURL.absoluteString)
+                Utils.copyFile(from: game.path, to: destinationURL.absoluteString + game.romName)
+            }
+        }
+    }
 }

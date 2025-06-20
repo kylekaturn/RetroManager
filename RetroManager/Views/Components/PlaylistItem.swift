@@ -19,6 +19,10 @@ struct PlaylistItem: View {
                     playlist.addGame(jsonString!)
                     playlistManager.refresh()
                 }
+                Divider()
+                Button("Backup Roms"){
+                    playlistManager.selectedPlaylist.backupRoms()
+                }
             }
     }
 }
