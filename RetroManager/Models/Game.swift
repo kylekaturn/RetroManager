@@ -50,6 +50,18 @@ class Game: Codable, Identifiable, Hashable{
         label = newLabel
     }
     
+    func clone() -> Game {
+        let newGame = Game()
+        newGame.path = self.path
+        newGame.label = self.label
+        newGame.core_path = self.core_path
+        newGame.core_name = self.core_name
+        newGame.crc32 = self.crc32
+        newGame.db_name = self.db_name
+        // id는 새 UUID로 남겨둠 (복제지만 새로운 개체로 취급)
+        return newGame
+    }
+    
     //json 스트링을 변환
     func toJson() -> String {
         let encoder = JSONEncoder()

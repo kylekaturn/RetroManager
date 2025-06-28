@@ -2,6 +2,7 @@ import SwiftUI
 import AppKit
 
 struct GameItem: View {
+    @EnvironmentObject var playlistManager: PlaylistManager;
     var game: Game
     var onCopy: (Game) -> Void = {_ in}
     var onPaste: (Game) -> Void = {_ in}
@@ -17,7 +18,7 @@ struct GameItem: View {
                 }
                 Divider()
                 Button("Open"){
-                    
+                    Utils.launchRetroArch(romPath: game.path, corePath: game.core_path)
                 }
                 Divider()
                 Button("Copy") {
@@ -25,6 +26,10 @@ struct GameItem: View {
                 }
                 Button("Paste"){
                     onPaste(game)
+                }
+                Button("Duplicate"){
+                    playlistManager.selectedPlaylist.addGame(game.clone())
+                    playlistManager.refresh()
                 }
                 Divider()
                 Button("Rename"){

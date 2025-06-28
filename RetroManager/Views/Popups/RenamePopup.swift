@@ -15,26 +15,33 @@ struct RenamePopup: View {
                 .frame(width: 400)
                 .focused($isFocused)
                 .onAppear { isFocused = true }
-                .onSubmit { onClose() }
+                .onSubmit {
+                    rename()
+                    onClose()
+                }
                 .onExitCommand { onClose() }
             HStack {
                 Button("Cancel") { onClose() }
                 Button("OK") {
-                    if(playlistManager.selectedGame.label != label){
-                        playlistManager.selectedGame.rename(label)
-                        playlistManager.selectedPlaylist.sort()
-                        playlistManager.selectedPlaylist.isDirty = true
-                        playlistManager.refresh()
-                    }
+                    rename()
                     onClose()
                 }
-                    .keyboardShortcut(.defaultAction)
+                .keyboardShortcut(.defaultAction)
             }
         }
         .padding()
         .frame(width: 450)
         .onAppear(){
             label = playlistManager.selectedGame.label
+        }
+    }
+    
+    func rename(){
+        if(playlistManager.selectedGame.label != label){
+            playlistManager.selectedGame.rename(label)
+            playlistManager.selectedPlaylist.sort()
+            playlistManager.selectedPlaylist.isDirty = true
+            playlistManager.refresh()
         }
     }
 }
