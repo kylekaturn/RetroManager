@@ -25,16 +25,21 @@ class Configuration{
         return config["screenshot_directory"] ?? ""
     }
     
+    func configPath() -> String{
+        return config["rgui_config_directory"] ?? ""
+    }
+    
     init(){
         let filePath = ("~/Library/Application Support/RetroArch/config/retroarch.cfg" as NSString).expandingTildeInPath
         print(FileManager.default.fileExists(atPath: filePath))
-        
+       
         do {
             let contents = try String(contentsOf: URL(fileURLWithPath: filePath), encoding: .utf8)
             config = parseRetroArchConfig(at: contents)
         } catch {
             print("\(error)")
         }
+        Utils.copyFile(from: filePath, to: configPath() + "/retroarch.cfg")
     }
     
     func parseRetroArchConfig(at content: String) -> [String: String] {
