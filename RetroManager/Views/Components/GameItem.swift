@@ -24,6 +24,10 @@ struct GameItem: View {
                 Button("Copy") {
                     onCopy(game)
                 }
+                Button("Copy to Mame"){
+                    playlistManager.playlists.first(where: {$0.label == "MAME"})?.addGame(game.clone())
+                    playlistManager.refresh()
+                }
                 Button("Paste"){
                     onPaste(game)
                 }

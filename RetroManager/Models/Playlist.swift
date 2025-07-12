@@ -119,8 +119,7 @@ class Playlist: Codable, Identifiable, Hashable{
 
         if panel.runModal() == .OK, let destinationURL = panel.url {
             items.forEach { game in
-                //print(destinationURL.absoluteString)
-                Utils.copyFile(from: game.path, to: destinationURL.absoluteString + game.romName)
+                Utils.copyFile(from: game.path, to: destinationURL.path() + URL(fileURLWithPath: game.path).lastPathComponent)
             }
         }
     }
