@@ -73,7 +73,7 @@ struct GameListView: View {
                     RenamePopup(onClose: {showRenamePopup = false})
                 }
                 .sheet(isPresented: $showEditPopup){
-                    EditPopup(onClose: {showRenamePopup = false})
+                    EditPopup(onClose: {showEditPopup = false})
                 }
                 Spacer();
                 Text("\(playlistManager.selectedPlaylist.items.count) Games").padding(.bottom , 10)
