@@ -98,9 +98,16 @@ struct GameListView: View {
     
     //선택된 게임 삭제
     private func deleteGame(_ game: Game){
-        let index = playlistManager.selectedPlaylist.items.firstIndex(of : playlistManager.selectedGame)
+        guard let index = playlistManager.selectedPlaylist.items.firstIndex(of : playlistManager.selectedGame)else{
+            return
+        }
         playlistManager.selectedPlaylist.deleteGame(playlistManager.selectedGame)
-        selectedGame = playlistManager.selectedPlaylist.items[index!]
+        if(index >= playlistManager.selectedPlaylist.items.count)
+        {
+            selectedGame = playlistManager.selectedPlaylist.items[index - 1]
+        }else{
+            selectedGame = playlistManager.selectedPlaylist.items[index]
+        }
         playlistManager.refresh()
     }
     
