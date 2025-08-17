@@ -14,6 +14,23 @@ struct PlaylistItem: View {
                     Utils.openFinder(atPath: playlist.file)
                 }
                 Divider()
+                Button("Add Game"){
+                    let panel = NSOpenPanel()
+                    panel.canChooseFiles = true
+                    panel.canChooseDirectories = false
+                    panel.allowsMultipleSelection = false
+                    panel.prompt = "Select File"
+
+                    if panel.runModal() == .OK, let destinationURL = panel.url {
+                       print(destinationURL)
+                        let game = playlist.items.first?.clone()
+                        game?.path = destinationURL.path
+                        game?.label = destinationURL.lastPathComponent
+                        playlist.addGame(game!)
+                        playlistManager.refresh()
+                    }
+                }
+                Divider()
                 Button("Paste"){
                     let jsonString = NSPasteboard.general.string(forType: .string)
                     playlist.addGame(jsonString!)

@@ -39,6 +39,20 @@ struct GameItem: View {
                 Button("Rename"){
                     onRename(game)
                 }
+                Button("Relocate"){
+                    let panel = NSOpenPanel()
+                    panel.canChooseFiles = true
+                    panel.canChooseDirectories = false
+                    panel.allowsMultipleSelection = false
+                    panel.prompt = "Select File"
+
+                    if panel.runModal() == .OK, let destinationURL = panel.url {
+                       print(destinationURL)
+                        game.path = destinationURL.path
+                        playlistManager.selectedPlaylist.isDirty = true
+                        playlistManager.refresh()
+                    }
+                }
                 Button("Edit"){
                     onEdit(game)
                 }
