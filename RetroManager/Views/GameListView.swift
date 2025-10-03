@@ -38,12 +38,6 @@ struct GameListView: View {
             }
             
             VStack{
-                List{
-                }
-                .listStyle(.sidebar)
-                .frame(height:30)
-                .searchable(text: $searchText, placement:.sidebar, prompt: "Search")
-                
                 List(selection: $selectedGame){
                     ForEach(filteredGames, id : \.self) {game in
                         GameItem(
@@ -55,6 +49,7 @@ struct GameListView: View {
                             onDelete: deleteGame)
                     }
                 }
+                .searchable(text: $searchText, placement:.sidebar, prompt: "Search")
                 .listStyle(.sidebar)
                 .frame(minWidth:300)
                 .onAppear(){
