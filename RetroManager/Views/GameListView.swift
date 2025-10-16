@@ -26,7 +26,7 @@ struct GameListView: View {
                 }
             }
             .listStyle(.sidebar)
-            .frame(width:150)
+            .frame(width:200)
             .id(playlistManager.refreshID)
             .onAppear(){
                 selectedPlaylist = playlistManager.selectedPlaylist

@@ -19,6 +19,7 @@ class PlaylistManager: ObservableObject {
                         playlist.label = fileURL.deletingPathExtension().lastPathComponent
                         playlist.file = fileURL.path
                         playlists.append(playlist)
+                        playlists.sort(by: { $0.label < $1.label }) 
                         selectedPlaylist = playlists.first!
                         selectedGame = selectedPlaylist.items.first!
                         print("Playlists Loaded : \(fileURL.path)")
