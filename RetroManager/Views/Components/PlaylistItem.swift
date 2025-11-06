@@ -1,11 +1,11 @@
-
 import SwiftUI
+import UniformTypeIdentifiers
 import AppKit
 
 struct PlaylistItem: View {
     @EnvironmentObject var playlistManager: PlaylistManager;
     var playlist: Playlist
-    var onPaste: (Game) -> Void = {_ in}
+    var onAdd: (Game) -> Void = {_ in}
     
     var body: some View {
         Text("\(playlist.isDirty ? "*" : "")\(playlist.label)")
@@ -20,13 +20,18 @@ struct PlaylistItem: View {
                     panel.canChooseDirectories = false
                     panel.allowsMultipleSelection = false
                     panel.prompt = "Select File"
-
+                    panel.allowedContentTypes = [
+                        UTType(filenameExtension: "bat")!,
+                        UTType(filenameExtension: "exe")!,
+                        UTType(filenameExtension: "com")!
+                    ]
+                    
                     if panel.runModal() == .OK, let destinationURL = panel.url {
-                       print(destinationURL)
                         let game = playlist.items.first?.clone()
                         game?.path = destinationURL.path
-                        game?.label = destinationURL.lastPathComponent
+                        game?.label = destinationURL.deletingLastPathComponent().lastPathComponent
                         playlist.addGame(game!)
+                        onAdd(game!)
                         playlistManager.refresh()
                     }
                 }

@@ -4,9 +4,10 @@ import SwiftUI
 struct RetroManagerApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject var playlistManager: PlaylistManager;
+    var configuration: Configuration;
     
     init(){
-        let configuration: Configuration = Configuration()
+        configuration = Configuration()
         Path.PLAYLIST_PATH = configuration.playlistPath()
         Path.THUMBNAIL_PATH = configuration.thumbnailPath()
         Path.SCREENSHOT_PATH = configuration.screenshotPath()
@@ -29,6 +30,15 @@ struct RetroManagerApp: App {
                 }
                 .keyboardShortcut("s", modifiers: [.command])
                 .disabled(playlistManager.selectedPlaylist.items.isEmpty)
+            }
+            CommandGroup(after: .saveItem) {   // SaveItem 그룹 다음에 추가
+                Divider()
+                    Button("Save Configuration") {
+                        configuration.save();
+                    }
+                    Button("Load Configuration"){
+                        configuration.load();
+                    }
             }
         }
         Settings{

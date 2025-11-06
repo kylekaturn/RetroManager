@@ -29,6 +29,16 @@ class Configuration{
         return config["rgui_config_directory"] ?? ""
     }
     
+    func load(){
+        let filePath = ("~/Library/Application Support/RetroArch/config/retroarch.cfg" as NSString).expandingTildeInPath
+        Utils.copyFile(from: configPath() + "/retroarch.cfg", to: filePath)
+    }
+    
+    func save(){
+        let filePath = ("~/Library/Application Support/RetroArch/config/retroarch.cfg" as NSString).expandingTildeInPath
+        Utils.copyFile(from: filePath, to: configPath() + "/retroarch.cfg")
+    }
+    
     init(){
         let filePath = ("~/Library/Application Support/RetroArch/config/retroarch.cfg" as NSString).expandingTildeInPath
         print(FileManager.default.fileExists(atPath: filePath))

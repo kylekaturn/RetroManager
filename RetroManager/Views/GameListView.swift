@@ -22,7 +22,9 @@ struct GameListView: View {
         HStack{
             List(selection: $selectedPlaylist){
                 ForEach(playlistManager.playlists, id : \.self){ item in
-                    PlaylistItem(playlist: item)
+                    PlaylistItem(
+                        playlist: item,
+                        onAdd:addGame)
                 }
             }
             .listStyle(.sidebar)
@@ -74,6 +76,12 @@ struct GameListView: View {
                 Text("\(playlistManager.selectedPlaylist.items.count) Games").padding(.bottom , 10)
             }
         }
+    }
+    
+    //게임 추가시
+    private func addGame(_ game: Game){
+        selectedGame = game
+        playlistManager.refresh()
     }
     
     //선택된 게임 복제
