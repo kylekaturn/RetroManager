@@ -2,7 +2,6 @@ import Foundation
 
 class Configuration{
     
-    let filePath = "~/Library/Application Support/RetroArch/config/retroarch.cfg"
     var config : [String: String] = [:]
     
     func thumbnailPath() -> String{
@@ -30,17 +29,17 @@ class Configuration{
     }
     
     func load(){
-        let filePath = ("~/Library/Application Support/RetroArch/config/retroarch.cfg" as NSString).expandingTildeInPath
+        let filePath = (Path.CONFIGURATION_PATH as NSString).expandingTildeInPath
         Utils.copyFile(from: configPath() + "/retroarch.cfg", to: filePath)
     }
     
     func save(){
-        let filePath = ("~/Library/Application Support/RetroArch/config/retroarch.cfg" as NSString).expandingTildeInPath
+        let filePath = (Path.CONFIGURATION_PATH as NSString).expandingTildeInPath
         Utils.copyFile(from: filePath, to: configPath() + "/retroarch.cfg")
     }
     
     init(){
-        let filePath = ("~/Library/Application Support/RetroArch/config/retroarch.cfg" as NSString).expandingTildeInPath
+        let filePath = (Path.CONFIGURATION_PATH as NSString).expandingTildeInPath
         print(FileManager.default.fileExists(atPath: filePath))
        
         do {
@@ -49,7 +48,7 @@ class Configuration{
         } catch {
             print("\(error)")
         }
-        Utils.copyFile(from: filePath, to: configPath() + "/retroarch.cfg")
+        //Utils.copyFile(from: filePath, to: configPath() + "/retroarch.cfg")
     }
     
     func parseRetroArchConfig(at content: String) -> [String: String] {

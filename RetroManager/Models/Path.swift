@@ -1,5 +1,6 @@
 class Path {
     static var SYSTEM_PATH = "MAME"
+    static var CONFIGURATION_PATH: String = "~/Library/Application Support/RetroArch/config/retroarch.cfg"
     static var PLAYLIST_PATH: String = ""
     static var THUMBNAIL_PATH: String = ""
     static var SCREENSHOT_PATH: String = ""

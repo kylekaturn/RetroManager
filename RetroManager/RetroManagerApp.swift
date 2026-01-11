@@ -39,6 +39,9 @@ struct RetroManagerApp: App {
                     Button("Load Configuration"){
                         configuration.load();
                     }
+                    Button("Open Configuration Folder"){
+                        Utils.openFinder(atPath: Path.CONFIGURATION_PATH);
+                    }
             }
         }
         Settings{
