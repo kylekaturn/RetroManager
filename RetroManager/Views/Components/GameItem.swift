@@ -1,4 +1,5 @@
 import SwiftUI
+import UniformTypeIdentifiers
 import AppKit
 
 struct GameItem: View {
@@ -44,6 +45,11 @@ struct GameItem: View {
                     panel.canChooseFiles = true
                     panel.canChooseDirectories = false
                     panel.allowsMultipleSelection = false
+                    panel.allowedContentTypes = [
+                        UTType(filenameExtension: "bat")!,
+                        UTType(filenameExtension: "exe")!,
+                        UTType(filenameExtension: "com")!
+                    ]
                     panel.prompt = "Select File"
 
                     if panel.runModal() == .OK, let destinationURL = panel.url {
