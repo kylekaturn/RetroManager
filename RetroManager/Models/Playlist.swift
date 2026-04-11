@@ -1,7 +1,7 @@
 import Foundation
 import AppKit
 
-class Playlist: Codable, Identifiable, Hashable{
+struct Playlist: Codable, Identifiable, Hashable{
     var id: UUID = UUID()
     var label: String = ""
     var file: String = ""
@@ -22,7 +22,7 @@ class Playlist: Codable, Identifiable, Hashable{
     var scan_filter_dat_content: Bool
     var scan_overwrite_playlist: Bool
     var items: [Game]
-    
+
     enum CodingKeys: String, CodingKey {
         case version
         case default_core_path
@@ -41,7 +41,7 @@ class Playlist: Codable, Identifiable, Hashable{
         case scan_overwrite_playlist
         case items
     }
-    
+
     init(){
         version = "Version"
         default_core_path = "DefaultCorePath"
@@ -60,46 +60,46 @@ class Playlist: Codable, Identifiable, Hashable{
         scan_overwrite_playlist = false
         items = [Game(), Game(), Game(), Game(), Game(), Game(), Game(), Game(), Game(), Game(), Game(), Game(), Game(), Game()]
     }
-    
+
     static func == (lhs: Playlist, rhs: Playlist) -> Bool {
         return lhs.id == rhs.id
     }
-    
+
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
-    
+
     //게임 추가
-    func addGame(_ game: Game){
+    mutating func addGame(_ game: Game){
         items.append(game)
         sort()
         isDirty = true
     }
-    
+
     //게임 추가(json)
-    func addGame(_ jsonString: String){
+    mutating func addGame(_ jsonString: String){
         if let jsonData = jsonString.data(using: .utf8), let game = try? JSONDecoder().decode(Game.self, from: jsonData) {
             addGame(game)
         } else {
             print("PasteGame Failed.")
         }
     }
-    
+
     //게임 제거
-    func deleteGame(_ game: Game){
+    mutating func deleteGame(_ game: Game){
         if let index = items.firstIndex(of: game) {
             items.remove(at: index)
         }
         isDirty = true
     }
-    
+
     //소팅
-    func sort(){
+    mutating func sort(){
         items.sort { $0.label.lowercased() < $1.label.lowercased() }
     }
-    
+
     //Json 파일 저장
-    func save() throws {
+    mutating func save() throws {
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .withoutEscapingSlashes]
         let data = try encoder.encode(self)
@@ -108,7 +108,7 @@ class Playlist: Codable, Identifiable, Hashable{
         print("Save Complete")
         isDirty = false
     }
-    
+
     //롬파일 백업
     func backupRoms() {
         let panel = NSOpenPanel()

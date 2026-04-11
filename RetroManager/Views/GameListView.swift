@@ -1,8 +1,8 @@
 import SwiftUI
 
 struct GameListView: View {
-    
-    @EnvironmentObject var playlistManager: PlaylistManager;
+
+    @EnvironmentObject var playlistManager: PlaylistManager
     @State var selectedPlaylist: Playlist? = nil
     @State var selectedGame: Game? = nil
     @State var searchText: String = ""
@@ -17,28 +17,29 @@ struct GameListView: View {
             }
         }
     }
-    
+
     var body: some View {
         HStack{
             List(selection: $selectedPlaylist){
                 ForEach(playlistManager.playlists, id : \.self){ item in
                     PlaylistItem(
                         playlist: item,
-                        onAdd:addGame)
+                        onAdd: addGame)
                 }
             }
             .listStyle(.sidebar)
             .frame(width:200)
-            .id(playlistManager.refreshID)
             .onAppear(){
                 selectedPlaylist = playlistManager.selectedPlaylist
-                Path.SYSTEM_PATH = selectedPlaylist!.label
             }
             .onChange(of: selectedPlaylist){
-                playlistManager.selectedPlaylist = selectedPlaylist!
-                Path.SYSTEM_PATH = selectedPlaylist!.label
+                guard let playlist = selectedPlaylist else { return }
+                playlistManager.selectPlaylist(playlist)
+                if let firstGame = playlistManager.selectedPlaylist.items.first {
+                    selectedGame = firstGame
+                }
             }
-            
+
             VStack{
                 List(selection: $selectedGame){
                     ForEach(filteredGames, id : \.self) {game in
@@ -58,11 +59,12 @@ struct GameListView: View {
                     selectedGame = playlistManager.selectedGame
                 }
                 .onChange(of: selectedGame){
-                    playlistManager.selectedGame = selectedGame!
+                    guard let game = selectedGame else { return }
+                    playlistManager.selectGame(game)
                 }
                 .onKeyPress(action: { keyPress in
-                    if(keyPress.key.character == "\u{7F}"){
-                        deleteGame(selectedGame!)
+                    if keyPress.key.character == "\u{7F}", let game = selectedGame {
+                        deleteGame(game)
                     }
                     return .ignored
                 })
@@ -72,18 +74,17 @@ struct GameListView: View {
                 .sheet(isPresented: $showEditPopup){
                     EditPopup(onClose: {showEditPopup = false})
                 }
-                Spacer();
+                Spacer()
                 Text("\(playlistManager.selectedPlaylist.items.count) Games").padding(.bottom , 10)
             }
         }
     }
-    
+
     //게임 추가시
     private func addGame(_ game: Game){
         selectedGame = game
-        playlistManager.refresh()
     }
-    
+
     //선택된 게임 복제
     private func copyGame(_ game: Game){
         let jsonString = game.toJson()
@@ -91,36 +92,36 @@ struct GameListView: View {
         pasteboard.clearContents()
         pasteboard.setString(jsonString, forType: .string)
     }
-    
+
     //게임 붙여넣기
     private func pasteGame(_ game: Game){
-        let jsonString = NSPasteboard.general.string(forType: .string)
-        playlistManager.selectedPlaylist.addGame(jsonString!)
-        playlistManager.refresh()
+        guard let jsonString = NSPasteboard.general.string(forType: .string) else { return }
+        playlistManager.selectedPlaylist.addGame(jsonString)
     }
-    
+
     //선택된 게임 삭제
     private func deleteGame(_ game: Game){
-        guard let index = playlistManager.selectedPlaylist.items.firstIndex(of : playlistManager.selectedGame)else{
+        guard let index = playlistManager.selectedPlaylist.items.firstIndex(of: game) else {
             return
         }
-        playlistManager.selectedPlaylist.deleteGame(playlistManager.selectedGame)
-        if(index >= playlistManager.selectedPlaylist.items.count)
-        {
-            selectedGame = playlistManager.selectedPlaylist.items[index - 1]
-        }else{
-            selectedGame = playlistManager.selectedPlaylist.items[index]
+        playlistManager.selectedPlaylist.deleteGame(game)
+        let items = playlistManager.selectedPlaylist.items
+        if items.isEmpty {
+            selectedGame = nil
+        } else if index >= items.count {
+            selectedGame = items[items.count - 1]
+        } else {
+            selectedGame = items[index]
         }
-        playlistManager.refresh()
     }
-    
+
     //게임 이름 변경
     private func renameGame(_ game: Game){
         selectedGame = game
         renameLabel = game.label
         showRenamePopup = true
     }
-    
+
     private func editGame(_ game: Game){
         selectedGame = game
         showEditPopup = true

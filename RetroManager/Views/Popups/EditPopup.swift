@@ -2,14 +2,14 @@
 import SwiftUI
 
 struct EditPopup: View {
-    @EnvironmentObject var playlistManager: PlaylistManager;
+    @EnvironmentObject var playlistManager: PlaylistManager
     @State private var label:String = ""
     @State private var path:String = ""
-    
+
     var onClose: () -> Void
-    
+
     var body: some View {
-        
+
         VStack{
             Text("Edit Game")
                 .font(.headline)
@@ -26,13 +26,12 @@ struct EditPopup: View {
             HStack {
                 Button("Cancel") { onClose() }
                 Button("OK") {
-                    if(playlistManager.selectedGame.label != label){
-                        playlistManager.selectedGame.rename(label)
+                    if playlistManager.selectedGame.label != label {
+                        playlistManager.selectedGame.rename(label, systemPath: playlistManager.systemPath)
                         playlistManager.selectedPlaylist.sort()
                         playlistManager.selectedPlaylist.isDirty = true
-                        playlistManager.refresh()
                     }
-                    if(playlistManager.selectedGame.path != path){
+                    if playlistManager.selectedGame.path != path {
                         playlistManager.selectedGame.path = path
                         playlistManager.selectedPlaylist.isDirty = true
                     }

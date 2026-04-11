@@ -1,10 +1,10 @@
 import SwiftUI
 
 struct RenamePopup: View {
-    @EnvironmentObject var playlistManager: PlaylistManager;
+    @EnvironmentObject var playlistManager: PlaylistManager
     @State private var label: String = ""
     @FocusState private var isFocused: Bool
-    
+
     var onClose: () -> Void
 
     var body: some View {
@@ -35,13 +35,12 @@ struct RenamePopup: View {
             label = playlistManager.selectedGame.label
         }
     }
-    
+
     func rename(){
-        if(playlistManager.selectedGame.label != label){
-            playlistManager.selectedGame.rename(label)
+        if playlistManager.selectedGame.label != label {
+            playlistManager.selectedGame.rename(label, systemPath: playlistManager.systemPath)
             playlistManager.selectedPlaylist.sort()
             playlistManager.selectedPlaylist.isDirty = true
-            playlistManager.refresh()
         }
     }
 }

@@ -3,14 +3,14 @@ import UniformTypeIdentifiers
 import AppKit
 
 struct GameItem: View {
-    @EnvironmentObject var playlistManager: PlaylistManager;
+    @EnvironmentObject var playlistManager: PlaylistManager
     var game: Game
     var onCopy: (Game) -> Void = {_ in}
     var onPaste: (Game) -> Void = {_ in}
     var onRename: (Game) -> Void = {_ in}
     var onEdit: (Game) -> Void = {_ in}
     var onDelete: (Game) -> Void = {_ in}
-    
+
     var body: some View {
         Text("\(game.label)")
             .contextMenu{
@@ -26,15 +26,15 @@ struct GameItem: View {
                     onCopy(game)
                 }
                 Button("Copy to Mame"){
-                    playlistManager.playlists.first(where: {$0.label == "MAME"})?.addGame(game.clone())
-                    playlistManager.refresh()
+                    if let mameID = playlistManager.playlists.first(where: { $0.label == "MAME" })?.id {
+                        playlistManager.modifyPlaylist(withID: mameID) { $0.addGame(game.clone()) }
+                    }
                 }
                 Button("Paste"){
                     onPaste(game)
                 }
                 Button("Duplicate"){
                     playlistManager.selectedPlaylist.addGame(game.clone())
-                    playlistManager.refresh()
                 }
                 Divider()
                 Button("Rename"){
@@ -53,10 +53,10 @@ struct GameItem: View {
                     panel.prompt = "Select File"
 
                     if panel.runModal() == .OK, let destinationURL = panel.url {
-                       print(destinationURL)
-                        game.path = destinationURL.path
-                        playlistManager.selectedPlaylist.isDirty = true
-                        playlistManager.refresh()
+                        if let index = playlistManager.selectedPlaylist.items.firstIndex(where: { $0.id == game.id }) {
+                            playlistManager.selectedPlaylist.items[index].path = destinationURL.path
+                            playlistManager.selectedPlaylist.isDirty = true
+                        }
                     }
                 }
                 Button("Edit"){

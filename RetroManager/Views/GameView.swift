@@ -16,9 +16,9 @@ struct GameView: View {
             Spacer().frame(height:10)
             
             HStack{
-                ThumbnailItem(thumbnailType:.boxart , thumbnailLabel: playlistManager.selectedGame.label)
-                ThumbnailItem(thumbnailType:.title , thumbnailLabel: playlistManager.selectedGame.label)
-                ThumbnailItem(thumbnailType:.snap , thumbnailLabel: playlistManager.selectedGame.label)
+                ThumbnailItem(thumbnailType:.boxart , thumbnailLabel: playlistManager.selectedGame.label, systemPath: playlistManager.systemPath)
+                ThumbnailItem(thumbnailType:.title , thumbnailLabel: playlistManager.selectedGame.label, systemPath: playlistManager.systemPath)
+                ThumbnailItem(thumbnailType:.snap , thumbnailLabel: playlistManager.selectedGame.label, systemPath: playlistManager.systemPath)
             }
             
             Spacer().frame(height:10)
@@ -44,14 +44,14 @@ struct GameView: View {
                         NSWorkspace.shared.open(url)
                     }
                 }
-                Button("Serach File"){
+                Button("Search File"){
                     if let label = URL(string: playlistManager.selectedGame.path)?.deletingPathExtension().lastPathComponent,
                        let query = label.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
                        let url = URL(string: "\(google)\(query)") {
                         NSWorkspace.shared.open(url)
                     }
                 }
-                Button("Serach LaunchBox"){
+                Button("Search LaunchBox"){
                     if let query = playlistManager.selectedGame.label.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
                        let url = URL(string: "\(launchbox)\(query)") {
                         NSWorkspace.shared.open(url)

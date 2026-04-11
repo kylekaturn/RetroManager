@@ -8,9 +8,11 @@ struct RetroManagerApp: App {
     
     init(){
         configuration = Configuration()
-        Path.PLAYLIST_PATH = configuration.playlistPath()
-        Path.THUMBNAIL_PATH = configuration.thumbnailPath()
-        Path.SCREENSHOT_PATH = configuration.screenshotPath()
+        Path.configure(
+            playlistPath: configuration.playlistPath(),
+            thumbnailPath: configuration.thumbnailPath(),
+            screenshotPath: configuration.screenshotPath()
+        )
         _playlistManager = StateObject(wrappedValue: PlaylistManager())
     }
     
@@ -19,11 +21,11 @@ struct RetroManagerApp: App {
             ContentView()
                 .environmentObject(playlistManager)
         }.commands{
+            CommandGroup(replacing: .newItem) { }
             CommandGroup(replacing: .saveItem) {
                 Button("Save Playlist") {
                     do {
                         try playlistManager.selectedPlaylist.save()
-                        playlistManager.refresh()
                     } catch {
                         print("Save Failed.")
                     }

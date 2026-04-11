@@ -3,7 +3,8 @@ import SwiftUI
 struct ThumbnailItem: View {
     var thumbnailType: ThumbnailType
     var thumbnailLabel: String
-    var thumbnailPath: String {Path.getThumbnailPath(thumbnailType: thumbnailType, label: thumbnailLabel)}
+    var systemPath: String
+    var thumbnailPath: String {Path.getThumbnailPath(thumbnailType: thumbnailType, label: thumbnailLabel, systemPath: systemPath)}
     @State var width: Int = 0
     @State var height: Int = 0
     @State private var showResizeSheet = false
@@ -98,5 +99,5 @@ struct ThumbnailItem: View {
 }
 
 #Preview {
-    ThumbnailItem(thumbnailType:.snap , thumbnailLabel: "ThumbnailLabel")
+    ThumbnailItem(thumbnailType:.snap , thumbnailLabel: "ThumbnailLabel", systemPath: "MAME")
 }

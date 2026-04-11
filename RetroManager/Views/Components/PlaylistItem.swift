@@ -3,10 +3,10 @@ import UniformTypeIdentifiers
 import AppKit
 
 struct PlaylistItem: View {
-    @EnvironmentObject var playlistManager: PlaylistManager;
+    @EnvironmentObject var playlistManager: PlaylistManager
     var playlist: Playlist
     var onAdd: (Game) -> Void = {_ in}
-    
+
     var body: some View {
         Text("\(playlist.isDirty ? "*" : "")\(playlist.label)")
             .contextMenu{
@@ -25,21 +25,19 @@ struct PlaylistItem: View {
                         UTType(filenameExtension: "exe")!,
                         UTType(filenameExtension: "com")!
                     ]
-                    
+
                     if panel.runModal() == .OK, let destinationURL = panel.url {
-                        let game = playlist.items.first?.clone()
-                        game?.path = destinationURL.path
-                        game?.label = destinationURL.deletingLastPathComponent().lastPathComponent
-                        playlist.addGame(game!)
-                        onAdd(game!)
-                        playlistManager.refresh()
+                        guard var game = playlist.items.first?.clone() else { return }
+                        game.path = destinationURL.path
+                        game.label = destinationURL.deletingLastPathComponent().lastPathComponent
+                        playlistManager.modifyPlaylist(withID: playlist.id) { $0.addGame(game) }
+                        onAdd(game)
                     }
                 }
                 Divider()
                 Button("Paste"){
-                    let jsonString = NSPasteboard.general.string(forType: .string)
-                    playlist.addGame(jsonString!)
-                    playlistManager.refresh()
+                    guard let jsonString = NSPasteboard.general.string(forType: .string) else { return }
+                    playlistManager.modifyPlaylist(withID: playlist.id) { $0.addGame(jsonString) }
                 }
                 Divider()
                 Button("Backup Roms"){

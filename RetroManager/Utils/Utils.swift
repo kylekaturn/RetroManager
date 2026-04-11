@@ -17,27 +17,27 @@ final class Utils {
 
         //새 파일이 이미 있으면 삭제(Overwrite)
         if fileManager.fileExists(atPath: newPath) {
-            try! fileManager.removeItem(atPath: newPath)
+            try? fileManager.removeItem(atPath: newPath)
         }
 
-        //파일 이름 변경
-        try! fileManager.copyItem(atPath: oldPath, toPath: newPath)
+        //파일 복사
+        try? fileManager.copyItem(atPath: oldPath, toPath: newPath)
     }
 
     //Rename file with overwrite
     static func renameFile(from oldPath: String, to newPath: String) {
         let fileManager = FileManager.default
-        
+
         //기존파일이 없으면 리턴
         if(!fileManager.fileExists(atPath: oldPath)) {return}
 
         //새 파일이 이미 있으면 삭제(Overwrite)
         if fileManager.fileExists(atPath: newPath) {
-            try! fileManager.removeItem(atPath: newPath)
+            try? fileManager.removeItem(atPath: newPath)
         }
 
         //파일 이름 변경(이동)
-        try! fileManager.moveItem(atPath: oldPath, toPath: newPath)
+        try? fileManager.moveItem(atPath: oldPath, toPath: newPath)
     }
     
 
@@ -165,21 +165,4 @@ final class Utils {
         }
     }
 
-    /// 현재 날짜를 문자열로 반환 (예: "2025-05-06")
-    static func currentDateString(format: String = "yyyy-MM-dd") -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = format
-        return formatter.string(from: Date())
-    }
-
-    /// 문자열이 비어있는지 검사
-    static func isEmptyOrWhitespace(_ text: String?) -> Bool {
-        guard let text = text else { return true }
-        return text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-    }
-
-    /// 랜덤한 정수 생성
-    static func randomInt(min: Int, max: Int) -> Int {
-        return Int.random(in: min...max)
-    }
 }
