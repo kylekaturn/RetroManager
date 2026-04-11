@@ -9,6 +9,7 @@ struct GameListView: View {
     @State private var showRenamePopup = false
     @State private var showEditPopup = false
     @State private var renameLabel = ""
+    @State private var scrollTarget: Game? = nil
     var filteredGames: [Game] {
         if searchText.isEmpty {
             return playlistManager.selectedPlaylist.items
@@ -41,26 +42,36 @@ struct GameListView: View {
             }
 
             VStack{
-                List(selection: $selectedGame){
-                    ForEach(filteredGames, id : \.self) {game in
-                        GameItem(
-                            game:game,
-                            onCopy:copyGame,
-                            onPaste: pasteGame,
-                            onRename: renameGame,
-                            onEdit: editGame,
-                            onDelete: deleteGame)
+                ScrollViewReader { proxy in
+                    List(selection: $selectedGame){
+                        ForEach(filteredGames, id : \.self) {game in
+                            GameItem(
+                                game:game,
+                                onCopy:copyGame,
+                                onPaste: pasteGame,
+                                onRename: renameGame,
+                                onEdit: editGame,
+                                onDelete: deleteGame)
+                            .id(game.id)
+                        }
                     }
-                }
-                .searchable(text: $searchText, placement:.sidebar, prompt: "Search")
-                .listStyle(.sidebar)
-                .frame(minWidth:300)
-                .onAppear(){
-                    selectedGame = playlistManager.selectedGame
-                }
-                .onChange(of: selectedGame){
-                    guard let game = selectedGame else { return }
-                    playlistManager.selectGame(game)
+                    .searchable(text: $searchText, placement:.sidebar, prompt: "Search")
+                    .listStyle(.sidebar)
+                    .frame(minWidth:300)
+                    .onAppear(){
+                        selectedGame = playlistManager.selectedGame
+                    }
+                    .onChange(of: selectedGame){
+                        guard let game = selectedGame else { return }
+                        playlistManager.selectGame(game)
+                    }
+                    .onChange(of: scrollTarget) {
+                        guard let target = scrollTarget else { return }
+                        withAnimation {
+                            proxy.scrollTo(target.id, anchor: .center)
+                        }
+                        scrollTarget = nil
+                    }
                 }
                 .onKeyPress(action: { keyPress in
                     if keyPress.key.character == "\u{7F}", let game = selectedGame {
@@ -83,6 +94,7 @@ struct GameListView: View {
     //게임 추가시
     private func addGame(_ game: Game){
         selectedGame = game
+        scrollTarget = game
     }
 
     //선택된 게임 복제
